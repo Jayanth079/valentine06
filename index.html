@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>For Srujana 💖</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<audio id="bgMusic" loop>
+  <source src="music/song.mp3" type="audio/mpeg">
+</audio>
+
+<div class="container">
+
+  <!-- BEGIN SCREEN -->
+  <div class="card active">
+    <h1>A Small Story 📖</h1>
+    <p>Written quietly, with a full heart, for one very special person.</p>
+    <button onclick="startStory()">Begin 💖</button>
+  </div>
+
+  <!-- STORY -->
+  <div class="card">
+    <p>The day I received your text, Srujana, I felt happy… but curious.</p>
+    <p>I wondered if I still had a space in your heart.</p>
+    <button onclick="next()">Next ➜</button>
+  </div>
+
+  <div class="card">
+    <p>Then we talked.</p>
+    <p>And I realized maybe God gave us another chance.</p>
+    <button onclick="next()">Next ➜</button>
+  </div>
+
+  <div class="card">
+    <p>We planned an unplanned trip.</p>
+    <p>It became one of the most beautiful chapters of my life.</p>
+    <button onclick="next()">Next ➜</button>
+  </div>
+
+  <div class="card">
+    <p>The charm in your eyes. The way you smile.</p>
+    <p>I hope that never changes. But you changed me.</p>
+    <button onclick="next()">Next ➜</button>
+  </div>
+
+  <div class="card">
+    <p>Late nights. Endless talks.</p>
+    <p>I flew 10,020 km not to explore a country — just to be with you.</p>
+    <button onclick="next()">Next ➜</button>
+  </div>
+
+  <div class="card">
+    <p>We still have places to go.</p>
+    <p>There are so many places in this world,
+but the only one that really matters to me
+is the place you choose. Tell me where your heart wants to go,
+and I’ll take care of the surprise waiting there.</p>
+    <p>Let’s be crazy together.</p>
+    <button onclick="next()">Next ➜</button>
+  </div>
+
+  <!-- MYSTERY + QUESTION -->
+  <div class="card">
+    <p>There’s a moment I keep imagining.</p>
+    <p>Somewhere far from routine.</p>
+    <p>On a day that already belongs to you — August 1st.</p>
+    <p>I won’t tell you what happens there.</p>
+    <h2>Will you be my Valentine? 🌹</h2>
+    <button onclick="next()">Yes 💖</button>
+    <button class="no">No 🙈</button>
+  </div>
+
+  <!-- PHOTOS -->
+  <div class="card">
+    <h2>Our Memories 📸</h2>
+<img id="slideshow" src="images/1.jpg" alt="Our Memory">
+<div class="card">
+  <h2>Our Memories 📸</h2>
+  <img id="slideshow" src="images/1.jpg" alt="Our Memory">
+  <p class="end">Always yours,<br>Jayanth ❤️</p>
+</div>
+
+    <p class="end">Always yours,<br>Jayanth ❤️</p>
+  </div>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
