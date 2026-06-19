@@ -53,8 +53,10 @@
   .badge{font-size:11px;padding:3px 8px;border-radius:6px;font-weight:600}
   .b-med{background:#fdecec;color:var(--red)}
   .b-big{background:#e8f3ee;color:var(--green)}
+  .b-ver{background:#e4f0ff;color:#1559b0}
   html[data-theme="dark"] .b-med{background:#3a1e22}
   html[data-theme="dark"] .b-big{background:#16302a}
+  html[data-theme="dark"] .b-ver{background:#16263a;color:#7fb0ee}
   .chev{color:var(--muted);transition:transform .2s;font-size:13px}
   .card.open .chev{transform:rotate(90deg)}
   .body{display:none;padding:2px 16px 16px;border-top:1px solid var(--line)}
@@ -144,9 +146,9 @@ const DATA = [
  {c:"UNIBG",n:"Università di Bergamo",city:"Bergamo, Lombardia",
   l:["Engineering and Management for Health"],
   m:["Management Engineering (EN)","International Management, Entrepreneurship & Finance","Economics and Data Analysis","Digital Humanities (EN curricula)"]},
- {c:"UNIBO",n:"Alma Mater – Università di Bologna",city:"Bologna, Emilia-Romagna",big:true,med:true,
-  l:["Business and Economics (CLABE)","Economics and Finance","Economics, Politics and Social Sciences","International Studies (Forlì)","Genomics","Statistical Sciences (EN)","Automation / Materials Engineering (EN)","Astronomy"],
-  m:["Economics / Quantitative Finance / Health Economics","Artificial Intelligence","Bioinformatics","Physics / Astrophysics & Cosmology / Nuclear Physics","Automation, Electronics, Telecommunications, Civil/Offshore Eng.","Advanced Cosmetic Sciences","International Relations / Political Science","Tourism Economics & Management (Rimini)","🩺 Medicine and Surgery (LM CU, English)"]},
+ {c:"UNIBO",n:"Alma Mater – Università di Bologna",city:"Bologna, Emilia-Romagna",big:true,med:true,v:1,
+  l:["Business and Economics","Economics and Business – Management","Economics and Finance","Economics, Politics and Social Sciences","International Studies","Genomics","Statistical Sciences","International Tourism and Leisure Industries"],
+  m:["Artificial Intelligence","Bioinformatics","Astrophysics and Cosmology","Advanced Methods in Particle Physics","Advanced Spectroscopy in Chemistry","Aerospace Engineering","Automation Engineering","Biomedical Engineering","Advanced Automotive Engineering","Advanced Cosmetic Sciences","Chemical Innovation and Regulation","Low Carbon Technologies and Sustainable Chemistry","Mathematics","Mechanical Engineering for Sustainability","Environmental Assessment and Management","Resource Economics and Sustainable Development","Science of Climate","Applied Economics and Markets","Business Administration (International Management / Service Management)","Business Analytics and Data Science","Economics and Econometrics","Data Science and Business Analytics","Digital Humanities and Digital Knowledge","Fashion Studies","Food Safety and Food Risk Management","Medical Biotechnology","Health Economics and Management","Language, Society and Communication","Specialized Translation","Legal Studies","Law, Economics and Governance","Tourism Economics and Management","International Cooperation on Human Rights and Intercultural Heritage","Precise and Sustainable Agriculture","🩺 Medicine and Surgery (LM CU, English)"]},
  {c:"UNIBS",n:"Università di Brescia",city:"Brescia, Lombardia",med:true,l:[],
   m:["🩺 Medicine and Surgery (LM CU, English)","Communication Technologies & Multimedia / Electronic Eng.","International Business / Global Business & Markets"]},
  {c:"UNICA",n:"Università di Cagliari",city:"Cagliari, Sardegna",l:[],
@@ -190,9 +192,9 @@ const DATA = [
  {c:"UNIMI",n:"Università di Milano (La Statale)",city:"Milano, Lombardia",big:true,med:true,
   l:["International Politics, Law & Economics (IPLE)","Cognitive Science","Music Information Science (selected)"],
   m:["Data Science for Economics","Molecular Biology of the Cell / Molecular Biotechnology & Bioinformatics","Quantitative Biology, Industrial Chemistry","Computer Science, Physics, Environmental Change & Global Sustainability","🩺 Medicine and Surgery (International Medical School)"]},
- {c:"POLIMI",n:"Politecnico di Milano",city:"Milano, Lombardia",big:true,
-  l:["Selected Engineering & Design (EN sections)"],
-  m:["Nearly ALL Engineering MSc in English: Aerospace, Automation, Biomedical, Civil, Computer, Electrical, Electronics, Energy, Environmental, Management, Mathematical, Materials & Nanotech, Mechanical, Nuclear, Space, Telecommunications…","Architecture (Built Environment, Landscape, Urban Planning) — EN","Design (Product, Communication, Interior, Digital & Interaction, Fashion) — EN"]},
+ {c:"POLIMI",n:"Politecnico di Milano",city:"Milano, Lombardia",big:true,v:1,
+  l:["Civil Engineering","Engineering Science","Industrial Engineering","Process Engineering","Architectural Design","Interaction Design"],
+  m:["Aeronautical Engineering","Space Engineering","Automation and Control Engineering","Biomedical Engineering","Chemical Engineering","Civil Engineering","Civil Engineering for Risk Mitigation","Computer Science and Engineering","High Performance Computing Engineering","Cyber Risk, Strategy and Governance","Geoinformatics Engineering","Telecommunication / Music and Acoustic Engineering","Environmental and Land Planning Engineering","Agricultural Engineering","Building Engineering for Sustainability","Architectural Engineering","Engineering Physics","Materials Engineering and Nanotechnology","Mathematical Engineering","Bioinformatics for Computational Genomics","Management Engineering","Management of Built Environment","Industrial Safety and Risk Engineering","Food Engineering","Architecture","Architectural Design and History","Urban Planning and Policy Design","Communication Design","Digital and Interaction Design","Design and Engineering","Design for the Fashion System","Transformative Sustainability"]},
  {c:"UNIMIB",n:"Università di Milano-Bicocca",city:"Milano, Lombardia",big:true,med:true,
   l:["Artificial Intelligence (with UNIMI/UNIPV), selected science"],
   m:["Data Science, Marine Sciences, Economics & Finance, Physics, Astrophysics","Tourism Systems & Hospitality Management","🩺 Medicine and Surgery (English-taught)"]},
@@ -212,9 +214,9 @@ const DATA = [
  {c:"UNIVPM",n:"Università Politecnica delle Marche",city:"Ancona, Marche",
   l:["Biomedical Engineering / International Economics & Commerce"],
   m:["Biomedical, Environmental, Computer & Automation Engineering","International Economics & Commerce, Marine Biology"]},
- {c:"UNIPD",n:"Università di Padova",city:"Padova, Veneto",big:true,med:true,
-  l:["Information Engineering","Psychological Science","Animal Care","Sustainable Agriculture","Techniques & Management of Animal Production"],
-  m:["Computer Engineering, ICT for Internet & Multimedia, Control Systems, Electronic/Telecom Eng.","Data Science, Mathematics, Physics, Astrophysics & Cosmology, Materials Science","Economics & Finance, Entrepreneurship & Innovation, Human Rights & Multi-level Governance","Molecular Biology, Sustainable Chemistry, Environmental Sustainability","🩺 Medicine and Surgery (English-taught)"]},
+ {c:"UNIPD",n:"Università di Padova",city:"Padova, Veneto",big:true,med:true,v:1,
+  l:["Information Engineering","Psychological Science","Animal Care","Sustainable Agriculture","Techniques and Management of Animal Production"],
+  m:["Astrophysics and Cosmology","ALGANT – Algebra, Geometry and Number Theory","Applied Economics","Computational Finance","Accounting, Finance and Business Consulting","Management Engineering","Mathematical Engineering – Financial Engineering","Data Science","Cybersecurity","Computer Science","Computer Engineering","Control Systems Engineering","ICT for Internet and Multimedia","Aerospace Engineering","Electrical Engineering","Electronic Engineering","Energy Engineering","Environmental Engineering","Chemical and Process Engineering","Water and Geological Risk Engineering","Food Engineering","Complex and Data Driven Chemistry","Environmental Sciences for Ecological Transition","Marine Biology","Forest Sciences / Global Forestry","Sustainable Agriculture","Biotechnologies for Food Science","Medical / Pharmaceutical Biotechnologies","Cognitive Neuroscience and Clinical Neuropsychology","Cognitive Science for Human-Centric Technologies","English Studies","Human Rights and Multi-level Governance","Management for Sustainable Firms","Italian Food and Wine","🩺 Medicine and Surgery (English-taught, LM CU)"]},
  {c:"UNIPA",n:"Università di Palermo",city:"Palermo, Sicilia",l:[],
   m:["Medical Biotechnologies / selected engineering","Marine Biology / Computer Engineering (EN tracks)"]},
  {c:"UNIPR",n:"Università di Parma",city:"Parma, Emilia-Romagna",l:[],
@@ -234,9 +236,9 @@ const DATA = [
   m:["🩺 Medicine and Surgery (English-taught, LM CU – Novara)","Computer Science / Economics (selected)"]},
  {c:"UNIRC",n:"Università 'Mediterranea' di Reggio Calabria",city:"Reggio Calabria, Calabria",l:[],
   m:["Civil/Environmental Engineering, Architecture (selected)"]},
- {c:"UNIROMA1",n:"Sapienza Università di Roma",city:"Roma, Lazio",big:true,med:true,
-  l:["Bioinformatics","Applied Computer Science & Artificial Intelligence","Business Management","Global Humanities","Classics","Nursing (selected)"],
-  m:["Engineering in Computer Science, Control Eng., Data Science, AI & Robotics, Cybersecurity, Nanotech Eng., Space & Astronautical Eng., Transport Systems Eng.","Economics, Finance, Tourism Economics; Management; Statistical Methods","Physics, Astronomy & Astrophysics, Chemistry, Molecular Biology, Genetics","Product Design, Architecture (Conservation), Sustainable Building Engineering","Environmental & Resource Economics","🩺 Medicine and Surgery (international curricula)"]},
+ {c:"UNIROMA1",n:"Sapienza Università di Roma",city:"Roma, Lazio",big:true,med:true,v:1,
+  l:["Applied Computer Science and Artificial Intelligence","Classics","Global Humanities","Sustainable Building Engineering","Nursing","Molecular Biology, Medicinal Chemistry and Computer Science for Pharmaceutical Applications"],
+  m:["Artificial Intelligence","Artificial Intelligence and Robotics","Computer Science","Engineering in Computer Science","Control Engineering","Cybersecurity","Data Science","Nanotechnology Engineering","Aeronautical Engineering","Chemical Engineering","Electronics Engineering","Energy Engineering","Green Industrial Engineering for Sustainable Development","Environmental and Sustainable Building Engineering","Management Engineering","Astronomy and Astrophysics","Biochemistry","Genetics and Molecular Biology","Neurobiology","Cognitive Neuroscience","Cognitive Forensic Sciences","Archaeological Materials Science","Business Management","Economics and Communication for Management and Innovation","Finance and Insurance","Financial Institutions, International Finance and Risk Management","Actuarial and Financial Sciences","Health Economics","Development and International Cooperation Sciences","English and Anglo-American Studies","Oriental Languages and Cultures","Fashion Studies","Design, Multimedia and Visual Communication","Product and Service Design","Landscape Architecture","Architecture (Conservation)","Architecture – Urban Regeneration","Science and Technology for the Conservation of Cultural Heritage","CO2 Geological Storage","🩺 Medicine and Surgery (English-taught, LM CU)"]},
  {c:"UNIROMA2",n:"Università di Roma 'Tor Vergata'",city:"Roma, Lazio",big:true,med:true,
   l:["Global Governance","Engineering Sciences","Business Administration & Economics"],
   m:["Economics, Finance, European Economy & Business Law, Business Administration","Mechanical / Electronic / Embedded Systems / ICT & Internet Eng., Pharmaceutical Sciences","Physics, Mathematics","🩺 Medicine and Surgery (English-taught)"]},
@@ -258,7 +260,7 @@ const DATA = [
   m:["Italian language & culture focus; some EN master modules"]},
  {c:"UNITE",n:"Università di Teramo",city:"Teramo, Abruzzo",l:[],
   m:["Food Science / Biotechnology (selected)"]},
- {c:"UNITO",n:"Università di Torino",city:"Torino, Piemonte",big:true,med:true,
+ {c:"UNITO",n:"Università di Torino",city:"Torino, Piemonte",big:true,med:true,v:1,
   l:["Business & Management","Economics and Finance with Data Science","Global Law and Transnational Legal Studies"],
   m:["Area and Global Studies for International Cooperation","Artificial Intelligence and High Performance Computing Technologies","Artificial Intelligence for Biomedicine and Healthcare","Biotechnological and Chemical Sciences in Diagnostics","Biotechnology for Neuroscience","Business Administration","Cellular and Molecular Biology","Cultural Heritage and Creativity for Tourism","Digital Skills for Sustainable Societal Transition","Economics","Economic Analysis and Policy","Economics of Innovation for Sustainable Development","English and American Studies","European Legal Studies","Food Science and Technology","Language Technologies and Digital Humanities","Materials Science","Molecular Biotechnology","Quantitative Finance and Insurance","Stochastics and Data Science","🩺 Medicine and Surgery (English-taught, LM CU)"]},
  {c:"POLITO",n:"Politecnico di Torino",city:"Torino, Piemonte",big:true,med:true,
@@ -348,6 +350,7 @@ function render(){
     const card=document.createElement('div');
     card.className='card';
     const badges=[];
+    if(d.v)badges.push('<span class="badge b-ver">✓ Verified Jun 2026</span>');
     if(d.med)badges.push('<span class="badge b-med">🩺 EN Medicine</span>');
     if(d.big)badges.push('<span class="badge b-big">⭐ Large EN</span>');
     const nb=d.l?d.l.length:0, nm=d.m?d.m.length:0;
