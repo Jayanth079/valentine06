@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🇮🇹 Italian Public Universities — English Programmes</title>
+<meta name="description" content="Every Italian public (state) university, coded, with English-taught Bachelor's and Master's programmes.">
+<style>
+  :root{
+    --green:#008C45; --white:#fff; --red:#CD212A;
+    --bg:#f6f7f9; --card:#fff; --ink:#1c2128; --muted:#5a6472;
+    --line:#e6e9ee; --chip:#eef3f0;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.5}
+  header{background:linear-gradient(90deg,var(--green) 0 33%,var(--white) 33% 66%,var(--red) 66% 100%);height:8px}
+  .hero{background:var(--ink);color:#fff;padding:34px 20px 28px;text-align:center}
+  .hero h1{margin:0 0 6px;font-size:clamp(22px,4vw,34px)}
+  .hero p{margin:4px auto;max-width:680px;color:#c6ccd6;font-size:15px}
+  .stats{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:16px}
+  .stat{background:rgba(255,255,255,.08);padding:10px 16px;border-radius:10px;min-width:96px}
+  .stat b{display:block;font-size:22px;color:#fff}
+  .stat span{font-size:12px;color:#aeb6c2;text-transform:uppercase;letter-spacing:.5px}
+  .wrap{max-width:1100px;margin:0 auto;padding:20px}
+  .toolbar{position:sticky;top:0;z-index:20;background:var(--bg);padding:14px 0;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  #search{flex:1;min-width:220px;padding:12px 14px;border:1px solid var(--line);border-radius:10px;font-size:15px;background:#fff}
+  .filters{display:flex;gap:8px;flex-wrap:wrap}
+  .filt{border:1px solid var(--line);background:#fff;padding:9px 13px;border-radius:999px;cursor:pointer;font-size:13px;color:var(--muted)}
+  .filt.active{background:var(--green);color:#fff;border-color:var(--green)}
+  .count{font-size:13px;color:var(--muted);margin:4px 0 14px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;margin-bottom:12px;overflow:hidden}
+  .card-head{display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer}
+  .code{background:var(--chip);color:var(--green);font-weight:700;font-size:12px;padding:6px 9px;border-radius:8px;white-space:nowrap;letter-spacing:.3px}
+  .card-head .name{font-weight:600;flex:1;min-width:0}
+  .card-head .city{font-size:12.5px;color:var(--muted)}
+  .badges{display:flex;gap:6px;flex-wrap:wrap}
+  .badge{font-size:11px;padding:3px 8px;border-radius:6px;font-weight:600}
+  .b-med{background:#fdecec;color:var(--red)}
+  .b-big{background:#e8f3ee;color:var(--green)}
+  .chev{color:var(--muted);transition:transform .2s;font-size:13px}
+  .card.open .chev{transform:rotate(90deg)}
+  .body{display:none;padding:0 16px 16px 16px;border-top:1px solid var(--line)}
+  .card.open .body{display:block}
+  .lvl{margin:14px 0 6px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted)}
+  ul.courses{margin:0;padding-left:18px}
+  ul.courses li{margin:3px 0;font-size:14.5px}
+  .note{background:#fff8e6;border:1px solid #f0e2b6;border-radius:12px;padding:14px 16px;font-size:13.5px;color:#6b5b1f;margin:8px 0 20px}
+  .note a{color:var(--green);font-weight:600}
+  .empty{text-align:center;color:var(--muted);padding:40px}
+  footer{text-align:center;padding:26px 16px;color:var(--muted);font-size:13px}
+  footer a{color:var(--green)}
+  .share{display:inline-block;margin-top:8px;background:var(--green);color:#fff;border:none;padding:10px 18px;border-radius:10px;font-size:14px;cursor:pointer;text-decoration:none}
+</style>
+</head>
+<body>
+<header></header>
+<div class="hero">
+  <h1>🇮🇹 Italian Public Universities</h1>
+  <p>Every public (state) university in Italy — coded, top to bottom — with English-taught Bachelor's &amp; Master's programmes.</p>
+  <div class="stats">
+    <div class="stat"><b id="s-uni">—</b><span>Universities</span></div>
+    <div class="stat"><b id="s-med">—</b><span>English Medicine</span></div>
+    <div class="stat"><b>700+</b><span>EN programmes*</span></div>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="toolbar">
+    <input id="search" type="text" placeholder="🔍 Search university, city or course (e.g. 'Padova', 'Data Science', 'Medicine')…">
+    <div class="filters">
+      <button class="filt active" data-f="all">All</button>
+      <button class="filt" data-f="med">🩺 English Medicine</button>
+      <button class="filt" data-f="big">⭐ Large EN offering</button>
+    </div>
+  </div>
+  <div class="count" id="count"></div>
+
+  <div class="note">
+    ⚠️ <b>Verify before applying.</b> The university list is complete &amp; stable, but English course offerings change every academic year. Confirm the live, exhaustive list on
+    <a href="https://www.universitaly.it" target="_blank" rel="noopener">Universitaly</a> and
+    <a href="https://studyinitaly.esteri.it" target="_blank" rel="noopener">Study in Italy</a>.
+  </div>
+
+  <div id="list"></div>
+  <div class="empty" id="empty" style="display:none">No universities match your search.</div>
+</div>
+
+<footer>
+  Share this page with anyone planning to study in Italy 🇮🇹<br>
+  <a class="share" id="shareBtn" href="#">📤 Copy share link</a>
+  <p style="margin-top:14px">*700+ figure is the national total of English-taught programmes (Universitaly). Lists here are representative.</p>
+</footer>
+
+<script>
+const DATA = [
+ {c:"UNIBA",n:"Università di Bari Aldo Moro",city:"Bari, Puglia",
+  l:["Limited — English offering mainly in Economics & Science"],
+  m:["Economics – Models & Methods for Decisions and Strategies","Geophysics of Hydrocarbons","Precision Livestock Farming"]},
+ {c:"POLIBA",n:"Politecnico di Bari",city:"Bari, Puglia",l:[],
+  m:["Mechanical Engineering (EN track)","Electrical / Telecommunications Engineering (selected)","Building Engineering / Architecture (selected)"]},
+ {c:"UNIBAS",n:"Università della Basilicata",city:"Potenza, Basilicata",l:[],
+  m:["Mediterranean Forestry & Natural Resources (MEDfOR, Erasmus Mundus)"]},
+ {c:"UNIBG",n:"Università di Bergamo",city:"Bergamo, Lombardia",
+  l:["Engineering and Management for Health"],
+  m:["Management Engineering (EN)","International Management, Entrepreneurship & Finance","Economics and Data Analysis","Digital Humanities (EN curricula)"]},
+ {c:"UNIBO",n:"Alma Mater – Università di Bologna",city:"Bologna, Emilia-Romagna",big:true,med:true,
+  l:["Business and Economics (CLABE)","Economics and Finance","Economics, Politics and Social Sciences","International Studies (Forlì)","Genomics","Statistical Sciences (EN)","Automation / Materials Engineering (EN)","Astronomy"],
+  m:["Economics / Quantitative Finance / Health Economics","Artificial Intelligence","Bioinformatics","Physics / Astrophysics & Cosmology / Nuclear Physics","Automation, Electronics, Telecommunications, Civil/Offshore Eng.","Advanced Cosmetic Sciences","International Relations / Political Science","Tourism Economics & Management (Rimini)","🩺 Medicine and Surgery (LM CU, English)"]},
+ {c:"UNIBS",n:"Università di Brescia",city:"Brescia, Lombardia",med:true,l:[],
+  m:["🩺 Medicine and Surgery (LM CU, English)","Communication Technologies & Multimedia / Electronic Eng.","International Business / Global Business & Markets"]},
+ {c:"UNICA",n:"Università di Cagliari",city:"Cagliari, Sardegna",l:[],
+  m:["Geo/Environmental Engineering (selected)","Data Science, Business Analytics and Innovation","Erasmus Mundus joint masters"]},
+ {c:"UNICAL",n:"Università della Calabria",city:"Arcavacata di Rende (CS), Calabria",med:true,l:[],
+  m:["🩺 Medicine and Surgery (English-taught)","Computer Engineering for Robotics & Smart Industry","Economics (EN curriculum)"]},
+ {c:"UNICAM",n:"Università di Camerino",city:"Camerino, Marche",
+  l:["Computer Science (EN)"],
+  m:["Computer Science / Chemistry & Pharmaceutical (selected)","Architecture (international, LM CU)"]},
+ {c:"UNICAMPANIA",n:"Università 'Luigi Vanvitelli'",city:"Caserta / Napoli, Campania",med:true,l:[],
+  m:["🩺 Medicine and Surgery (English-taught, LM CU)","Sustainable Design / Data Analytics (selected)"]},
+ {c:"UNICAS",n:"Università di Cassino e del Lazio Meridionale",city:"Cassino, Lazio",l:[],
+  m:["Electrical / Telecommunications Engineering (selected)","Economics (EN track)"]},
+ {c:"UNICT",n:"Università di Catania",city:"Catania, Sicilia",
+  l:["Physics (EN)"],
+  m:["Physics, Materials Science (EN)","Pharmaceutical Biotechnology / Data Science","Global Politics & Euro-Mediterranean Relations (GLOPEM)"]},
+ {c:"UNICZ",n:"Università 'Magna Græcia' di Catanzaro",city:"Catanzaro, Calabria",med:true,l:[],
+  m:["🩺 Medicine and Surgery (English-taught, LM CU)","Biotechnology (selected)"]},
+ {c:"UNICH",n:"Università 'G. d'Annunzio' Chieti-Pescara",city:"Chieti-Pescara, Abruzzo",med:true,l:[],
+  m:["🩺 Medicine and Surgery (English-taught, LM CU)","Economics / Data Analytics for Business (selected)"]},
+ {c:"UNIFE",n:"Università di Ferrara",city:"Ferrara, Emilia-Romagna",
+  l:["Sustainable Industrial & Environmental Engineering"],
+  m:["Architecture (EN, LM CU)","Economics, Markets & Management / Innovation & Marketing","Advanced Mathematics, Physics (selected)"]},
+ {c:"UNIFI",n:"Università di Firenze",city:"Firenze, Toscana",big:true,
+  l:["Bioengineering / selected science"],
+  m:["Geoengineering, Electrical & Energy, Computer Engineering","Economics & Development, Finance & Risk Management","Design / Biotechnology / Natural Science (selected)"]},
+ {c:"UNIFG",n:"Università di Foggia",city:"Foggia, Puglia",l:[],
+  m:["Food Science & Technology / Agricultural Science (selected)"]},
+ {c:"UNIGE",n:"Università di Genova",city:"Genova, Liguria",big:true,
+  l:["Maritime Science & Technology / selected engineering"],
+  m:["Robotics Engineering, Computer Science, Yacht Design","Economics, International Affairs (EMECS)","Bioengineering / Materials / Mechanical (EN tracks)"]},
+ {c:"UNIVAQ",n:"Università dell'Aquila",city:"L'Aquila, Abruzzo",
+  l:["Computer Science (EN)"],
+  m:["Mathematical Engineering, Computer Science, Telecom Engineering","Economics (EN curriculum), Physics"]},
+ {c:"UNISALENTO",n:"Università del Salento",city:"Lecce, Puglia",l:[],
+  m:["Applied Data Science, Computer Engineering (selected)","Management Engineering / Economics & Finance (EN tracks)"]},
+ {c:"UNIMC",n:"Università di Macerata",city:"Macerata, Marche",l:[],
+  m:["Global Politics & International Relations","Management (International tourism / EN curriculum)"]},
+ {c:"UNIME",n:"Università di Messina",city:"Messina, Sicilia",l:[],
+  m:["Marine Biology / Maritime Engineering (selected)","Economics (EN curriculum)"]},
+ {c:"UNIMI",n:"Università di Milano (La Statale)",city:"Milano, Lombardia",big:true,med:true,
+  l:["International Politics, Law & Economics (IPLE)","Cognitive Science","Music Information Science (selected)"],
+  m:["Data Science for Economics","Molecular Biology of the Cell / Molecular Biotechnology & Bioinformatics","Quantitative Biology, Industrial Chemistry","Computer Science, Physics, Environmental Change & Global Sustainability","🩺 Medicine and Surgery (International Medical School)"]},
+ {c:"POLIMI",n:"Politecnico di Milano",city:"Milano, Lombardia",big:true,
+  l:["Selected Engineering & Design (EN sections)"],
+  m:["Nearly ALL Engineering MSc in English: Aerospace, Automation, Biomedical, Civil, Computer, Electrical, Electronics, Energy, Environmental, Management, Mathematical, Materials & Nanotech, Mechanical, Nuclear, Space, Telecommunications…","Architecture (Built Environment, Landscape, Urban Planning) — EN","Design (Product, Communication, Interior, Digital & Interaction, Fashion) — EN"]},
+ {c:"UNIMIB",n:"Università di Milano-Bicocca",city:"Milano, Lombardia",big:true,med:true,
+  l:["Artificial Intelligence (with UNIMI/UNIPV), selected science"],
+  m:["Data Science, Marine Sciences, Economics & Finance, Physics, Astrophysics","Tourism Systems & Hospitality Management","🩺 Medicine and Surgery (English-taught)"]},
+ {c:"UNIMORE",n:"Università di Modena e Reggio Emilia",city:"Modena / Reggio Emilia, E-R",big:true,
+  l:["Digital Education (selected)"],
+  m:["Advanced Automotive Engineering, Vehicle Engineering, Computer Engineering","International Management (EN tracks), Physics, Materials Science"]},
+ {c:"UNIMOL",n:"Università del Molise",city:"Campobasso, Molise",l:[],
+  m:["Food Science / selected science in English"]},
+ {c:"UNINA",n:"Università di Napoli Federico II",city:"Napoli, Campania",big:true,med:true,
+  l:["Selected engineering / science"],
+  m:["🩺 Medicine and Surgery (English-taught, LM CU)","Autonomous Vehicle Eng., Aerospace Eng., Computer Engineering","Data Science, Quantitative Finance, Biology (selected)"]},
+ {c:"UNIOR",n:"Università 'L'Orientale' di Napoli",city:"Napoli, Campania",l:[],
+  m:["Comparative Studies / International Relations (selected)"]},
+ {c:"UNIPARTHENOPE",n:"Università di Napoli 'Parthenope'",city:"Napoli, Campania",
+  l:["Management of Enterprises (selected)"],
+  m:["International Business / Economics, Marine Science (selected)"]},
+ {c:"UNIVPM",n:"Università Politecnica delle Marche",city:"Ancona, Marche",
+  l:["Biomedical Engineering / International Economics & Commerce"],
+  m:["Biomedical, Environmental, Computer & Automation Engineering","International Economics & Commerce, Marine Biology"]},
+ {c:"UNIPD",n:"Università di Padova",city:"Padova, Veneto",big:true,med:true,
+  l:["Information Engineering","Psychological Science","Animal Care","Sustainable Agriculture","Techniques & Management of Animal Production"],
+  m:["Computer Engineering, ICT for Internet & Multimedia, Control Systems, Electronic/Telecom Eng.","Data Science, Mathematics, Physics, Astrophysics & Cosmology, Materials Science","Economics & Finance, Entrepreneurship & Innovation, Human Rights & Multi-level Governance","Molecular Biology, Sustainable Chemistry, Environmental Sustainability","🩺 Medicine and Surgery (English-taught)"]},
+ {c:"UNIPA",n:"Università di Palermo",city:"Palermo, Sicilia",l:[],
+  m:["Medical Biotechnologies / selected engineering","Marine Biology / Computer Engineering (EN tracks)"]},
+ {c:"UNIPR",n:"Università di Parma",city:"Parma, Emilia-Romagna",l:[],
+  m:["Communication Engineering, Advanced Automotive Electronic Eng. (MUNER)","International Business and Development, Food Science"]},
+ {c:"UNIPV",n:"Università di Pavia",city:"Pavia, Lombardia",big:true,med:true,
+  l:["Bioinformatics","Electronic & Computer Engineering","Artificial Intelligence (with UNIMI/UNIMIB)"],
+  m:["Computer Engineering / Data Science, Electronic Eng., Civil Eng. for Risk Mitigation","Economics, Finance & International Integration; World Politics & IR (MIRD)","Molecular Biology & Genetics, Industrial Biotechnology","🩺 Medicine and Surgery ('Harvey' course, English)"]},
+ {c:"UNIPG",n:"Università di Perugia",city:"Perugia, Umbria",med:true,
+  l:["Selected economics / science"],
+  m:["🩺 Medicine and Surgery (English-taught, LM CU)","Comparative Law and Economics / International Studies"]},
+ {c:"UNISTRAPG",n:"Università per Stranieri di Perugia",city:"Perugia, Umbria",l:[],
+  m:["International Relations / Made in Italy (some EN components)"]},
+ {c:"UNIPI",n:"Università di Pisa",city:"Pisa, Toscana",big:true,
+  l:["Selected Engineering, Business Economics"],
+  m:["Computer Eng., Embedded Computing Systems, AI & Data Engineering, Aerospace, Robotics & Automation, Bionics, Materials & Nanotech","Economics, Business Informatics, Data Science & Business Informatics","Physics, Chemistry, Molecular Biotechnology, Marine Biology, Neuroscience"]},
+ {c:"UPO",n:"Università del Piemonte Orientale",city:"Vercelli / Novara / Alessandria",med:true,l:[],
+  m:["🩺 Medicine and Surgery (English-taught, LM CU – Novara)","Computer Science / Economics (selected)"]},
+ {c:"UNIRC",n:"Università 'Mediterranea' di Reggio Calabria",city:"Reggio Calabria, Calabria",l:[],
+  m:["Civil/Environmental Engineering, Architecture (selected)"]},
+ {c:"UNIROMA1",n:"Sapienza Università di Roma",city:"Roma, Lazio",big:true,med:true,
+  l:["Bioinformatics","Applied Computer Science & Artificial Intelligence","Business Management","Global Humanities","Classics","Nursing (selected)"],
+  m:["Engineering in Computer Science, Control Eng., Data Science, AI & Robotics, Cybersecurity, Nanotech Eng., Space & Astronautical Eng., Transport Systems Eng.","Economics, Finance, Tourism Economics; Management; Statistical Methods","Physics, Astronomy & Astrophysics, Chemistry, Molecular Biology, Genetics","Product Design, Architecture (Conservation), Sustainable Building Engineering","Environmental & Resource Economics","🩺 Medicine and Surgery (international curricula)"]},
+ {c:"UNIROMA2",n:"Università di Roma 'Tor Vergata'",city:"Roma, Lazio",big:true,med:true,
+  l:["Global Governance","Engineering Sciences","Business Administration & Economics"],
+  m:["Economics, Finance, European Economy & Business Law, Business Administration","Mechanical / Electronic / Embedded Systems / ICT & Internet Eng., Pharmaceutical Sciences","Physics, Mathematics","🩺 Medicine and Surgery (English-taught)"]},
+ {c:"UNIROMA3",n:"Università Roma Tre",city:"Roma, Lazio",
+  l:["Selected economics / political science"],
+  m:["Economics, Strategies for Global Markets, Computer Science & Engineering","Political Science (International Studies)"]},
+ {c:"FORO",n:"Università di Roma 'Foro Italico' (Sport Science)",city:"Roma, Lazio",l:[],
+  m:["Sport Science / Health & Physical Activity (selected EN modules)"]},
+ {c:"UNISA",n:"Università di Salerno",city:"Fisciano (SA), Campania",l:[],
+  m:["Computer Engineering / Data Science (selected)","Economics & Finance, Corporate Communication (EN tracks)"]},
+ {c:"UNISANNIO",n:"Università del Sannio",city:"Benevento, Campania",l:[],
+  m:["Energy Engineering / Electronic Engineering (selected)"]},
+ {c:"UNISS",n:"Università di Sassari",city:"Sassari, Sardegna",l:[],
+  m:["International Relations (selected), Biomedical / Agriculture","Erasmus Mundus joint masters"]},
+ {c:"UNISI",n:"Università di Siena",city:"Siena, Toscana",med:true,
+  l:["Economics & Banking, Economics & Management (selected)"],
+  m:["Economics, Finance, Applied Mathematics, Computer & Automation Engineering","Sustainable Development, Language & Mind (Linguistics & Cognitive Studies)","🩺 Medicine and Surgery (English-taught)"]},
+ {c:"UNISTRASI",n:"Università per Stranieri di Siena",city:"Siena, Toscana",l:[],
+  m:["Italian language & culture focus; some EN master modules"]},
+ {c:"UNITE",n:"Università di Teramo",city:"Teramo, Abruzzo",l:[],
+  m:["Food Science / Biotechnology (selected)"]},
+ {c:"UNITO",n:"Università di Torino",city:"Torino, Piemonte",big:true,med:true,
+  l:["Business & Management, International Studies (selected)"],
+  m:["Economics, Finance, Quantitative Finance & Insurance, Economics of Innovation","Stochastics & Data Science, Physics of Complex Systems, Cellular & Molecular Biology, Molecular Biotechnology","Computer Science (AI Systems / Data Science)","🩺 Medicine and Surgery (English-taught)"]},
+ {c:"POLITO",n:"Politecnico di Torino",city:"Torino, Piemonte",big:true,med:true,
+  l:["Selected engineering (EN sections)"],
+  m:["Most Engineering MSc in English: Aerospace, Automotive, Biomedical, Chemical, Civil, Computer, Electronic, Energy & Nuclear, Eng. & Management, Environmental, ICT for Smart Societies, Materials, Mechanical, Mechatronic, Nanotech, Georesources, Data Science & Engineering","Architecture (Architecture Construction City) — EN","🩺 Medicine and Surgery / MEDTEC (with Humanitas)"]},
+ {c:"UNITN",n:"Università di Trento",city:"Trento, Trentino-Alto Adige",big:true,
+  l:["Computer, Communications & Electronics Engineering; selected"],
+  m:["Computer Science (EIT Digital), AI Systems, Data Science, Human-Computer Interaction","Mechatronics, Materials & Production, Energy, Environmental & Civil Engineering","Economics, Innovation Management, Finance; International Security Studies; European & International Studies","Physics, Mathematics, Quantitative & Computational Biology, Cellular & Molecular Biotechnology"]},
+ {c:"UNITS",n:"Università di Trieste",city:"Trieste, Friuli-V.G.",l:[],
+  m:["Data Science & Scientific Computing, Physics, Materials Science, Computer Engineering","Economics (selected), International Cooperation & Development"]},
+ {c:"UNIUD",n:"Università di Udine",city:"Udine, Friuli-V.G.",
+  l:["Selected"],
+  m:["Artificial Intelligence & Cybersecurity, Computer Science, Internationalization of Business","Environmental & Energy / Civil Engineering (EN tracks)"]},
+ {c:"UNIINSUBRIA",n:"Università dell'Insubria",city:"Varese / Como, Lombardia",med:true,l:[],
+  m:["🩺 Medicine and Surgery (English-taught, LM CU)","Computer Science / Global Entrepreneurship Economics & Management (selected)"]},
+ {c:"UNIURB",n:"Università di Urbino 'Carlo Bo'",city:"Urbino, Marche",l:[],
+  m:["Economics & Management / Applied Computer Science (EN curricula)"]},
+ {c:"UNIVE",n:"Università Ca' Foscari Venezia",city:"Venezia, Veneto",big:true,
+  l:["Philosophy, International & Digital Communication","Economics & Business (selected curricula)"],
+  m:["Economics & Finance, Global Development & Entrepreneurship, Innovation & Marketing, Marketing & Communication, Management","Computer Science (Software Dependability & Cyber Security), Environmental Sciences, Chemistry & Sustainable Technologies, Bio & Nanomaterials","Comparative International Relations, Crossing the Mediterranean, Language Sciences"]},
+ {c:"IUAV",n:"Università Iuav di Venezia",city:"Venezia, Veneto",l:[],
+  m:["Architecture / selected design & planning (international curricula, EN)"]},
+ {c:"UNIVR",n:"Università di Verona",city:"Verona, Veneto",med:true,
+  l:["Economics, Bioinformatics (selected)"],
+  m:["🩺 Medicine and Surgery (English-taught, LM CU)","Computer Science & Engineering, Molecular & Medical Biotechnology, International Economics & Business Management, Marketing & Corporate Communication"]},
+ {c:"UNITUS",n:"Università della Tuscia",city:"Viterbo, Lazio",l:[],
+  m:["Conservation of Cultural Heritage / Plant & Animal Biotechnology / Economics (selected)"]},
+ {c:"SNS",n:"Scuola Normale Superiore",city:"Pisa — elite/postgrad",big:true,l:[],
+  m:["Honours courses (with UNIPI) + PhD: Physics, Maths, Neuroscience, Cultural Studies, Political Science & Sociology"]},
+ {c:"SSSA",n:"Scuola Superiore Sant'Anna",city:"Pisa — elite/postgrad",big:true,l:[],
+  m:["Integrated honours + PhD: Biorobotics, Economics, Management, Agricultural Science, Law, Data Science"]},
+ {c:"IMT",n:"Scuola IMT Alti Studi Lucca",city:"Lucca — postgrad",l:[],
+  m:["PhD (EN): Economics, Computer Science, Cognitive & Cultural Systems, Systems Science"]},
+ {c:"SISSA",n:"Scuola Internazionale Superiore di Studi Avanzati",city:"Trieste — postgrad",l:[],
+  m:["Master's & PhD (EN): Physics, Mathematics, Neuroscience, Data Science"]},
+ {c:"GSSI",n:"Gran Sasso Science Institute",city:"L'Aquila — postgrad",l:[],
+  m:["PhD (EN): Physics, Mathematics, Computer Science, Urban Studies & Regional Science"]},
+ {c:"IUSS",n:"Istituto Universitario di Studi Superiori (IUSS)",city:"Pavia — postgrad",l:[],
+  m:["Honours courses + PhD (EN): Extremes management, Cognitive Neuroscience (with SNS/Sant'Anna)"]}
+];
+
+const listEl=document.getElementById('list');
+const countEl=document.getElementById('count');
+const emptyEl=document.getElementById('empty');
+const searchEl=document.getElementById('search');
+let filter='all', q='';
+
+document.getElementById('s-uni').textContent=DATA.length;
+document.getElementById('s-med').textContent=DATA.filter(d=>d.med).length;
+
+function render(){
+  const ql=q.trim().toLowerCase();
+  let shown=0;
+  listEl.innerHTML='';
+  DATA.forEach((d,i)=>{
+    if(filter==='med' && !d.med) return;
+    if(filter==='big' && !d.big) return;
+    if(ql){
+      const hay=(d.c+' '+d.n+' '+d.city+' '+(d.l||[]).join(' ')+' '+(d.m||[]).join(' ')).toLowerCase();
+      if(!hay.includes(ql)) return;
+    }
+    shown++;
+    const card=document.createElement('div');
+    card.className='card';
+    const badges=[];
+    if(d.med)badges.push('<span class="badge b-med">🩺 EN Medicine</span>');
+    if(d.big)badges.push('<span class="badge b-big">⭐ Large EN</span>');
+    card.innerHTML=`
+      <div class="card-head">
+        <span class="code">${i+1}. ${d.c}</span>
+        <div class="name">${d.n}<div class="city">${d.city}</div></div>
+        <div class="badges">${badges.join('')}</div>
+        <span class="chev">▶</span>
+      </div>
+      <div class="body">
+        ${d.l&&d.l.length?`<div class="lvl">🎓 Bachelor's (English)</div><ul class="courses">${d.l.map(x=>`<li>${x}</li>`).join('')}</ul>`:''}
+        ${d.m&&d.m.length?`<div class="lvl">🎓 Master's (English)</div><ul class="courses">${d.m.map(x=>`<li>${x}</li>`).join('')}</ul>`:''}
+      </div>`;
+    card.querySelector('.card-head').addEventListener('click',()=>card.classList.toggle('open'));
+    if(ql) card.classList.add('open');
+    listEl.appendChild(card);
+  });
+  emptyEl.style.display=shown?'none':'block';
+  countEl.textContent=`Showing ${shown} of ${DATA.length} public universities`;
+}
+searchEl.addEventListener('input',e=>{q=e.target.value;render();});
+document.querySelectorAll('.filt').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.filt').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');filter=b.dataset.f;render();
+}));
+document.getElementById('shareBtn').addEventListener('click',e=>{
+  e.preventDefault();
+  const url=location.href;
+  if(navigator.share){navigator.share({title:'Italian Public Universities — English Programmes',url});}
+  else{navigator.clipboard.writeText(url).then(()=>{e.target.textContent='✅ Link copied!';setTimeout(()=>e.target.textContent='📤 Copy share link',2000);});}
+});
+render();
+</script>
+</body>
+</html>
