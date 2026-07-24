@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voyage — India → Italy Admissions Console</title>
+<style>
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  :root{--ink:#13233b;--mut:#6b7686;--line:#e4e9f0;--bg:#f3f5f8;--nav:#0f1b2d;--grn:#1f8f5f;--red:#cd2f3f;--amb:#c98a12}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink)}
+  .wrap{max-width:1080px;margin:0 auto;padding-bottom:60px}
+  header{background:var(--nav);color:#fff;padding:16px 20px}
+  header .t{display:flex;align-items:center;gap:10px}
+  header h1{margin:0;font-size:20px;font-weight:700;flex:1}
+  header .sub{font-size:12.5px;color:#9fb0c4;margin-top:3px}
+  .btn{border:none;border-radius:10px;padding:10px 15px;font-size:14px;font-weight:600;cursor:pointer}
+  .p{background:var(--grn);color:#fff}.g{background:#eef1f5;color:#415061}.d{background:#fdecec;color:var(--red)}
+  .ghost{background:rgba(255,255,255,.14);color:#fff}
+  nav{display:flex;gap:4px;overflow-x:auto;background:var(--nav);padding:0 14px}
+  nav button{background:none;border:none;color:#9fb0c4;padding:13px 14px;font-size:14px;font-weight:600;cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap}
+  nav button.on{color:#fff;border-bottom-color:var(--grn)}
+  .pane{display:none;padding:18px 16px}.pane.on{display:block}
+  .card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:12px}
+  .card h3{margin:0 0 10px;font-size:16px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+  label{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--mut);margin-bottom:4px}
+  input,select,textarea{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:10px;font-size:15px;font-family:inherit;background:#fff;color:var(--ink)}
+  textarea{min-height:70px;resize:vertical}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:14px}
+  .kpi{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px}
+  .kpi b{display:block;font-size:26px;line-height:1.1}
+  .kpi span{font-size:11.5px;color:var(--mut);text-transform:uppercase;letter-spacing:.4px}
+  .row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+  .row:last-child{border-bottom:none}
+  .av{width:40px;height:40px;border-radius:50%;background:var(--nav);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;flex:none}
+  .nm{flex:1;min-width:0}.nm b{font-size:15.5px}.nm .s{font-size:12.5px;color:var(--mut);margin-top:2px}
+  .pill{font-size:11px;font-weight:700;padding:4px 9px;border-radius:20px;white-space:nowrap}
+  .st0{background:#eef1f5;color:#5c6a7d}.st1{background:#fff4e0;color:var(--amb)}.st2{background:#e6f4ec;color:var(--grn)}.st3{background:#fdecec;color:var(--red)}
+  .bar{height:7px;background:#eef1f5;border-radius:20px;overflow:hidden;margin-top:6px}
+  .bar i{display:block;height:100%;background:var(--grn)}
+  .chk{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #f1f4f8;font-size:14.5px}
+  .chk input{width:19px;height:19px;flex:none}
+  .chk .why{font-size:11.5px;color:var(--mut);display:block;margin-top:2px}
+  .tag{display:inline-block;font-size:11px;background:#eef3f0;color:var(--grn);padding:3px 8px;border-radius:6px;margin:2px 3px 2px 0;font-weight:600}
+  .muted{color:var(--mut);font-size:13px}
+  .empty{text-align:center;color:var(--mut);padding:34px 10px}
+  .warn{background:#fff8e6;border:1px solid #f0e2b6;color:#7a6318;border-radius:12px;padding:12px 14px;font-size:13px;line-height:1.5;margin-bottom:12px}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  th{text-align:left;font-size:11px;text-transform:uppercase;color:var(--mut);padding:8px 6px;border-bottom:2px solid var(--line)}
+  td{padding:10px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+  .mask{display:none;position:fixed;inset:0;background:rgba(15,27,45,.6);z-index:40;padding:16px;overflow:auto}
+  .mask.on{display:block}
+  .modal{background:#fff;max-width:680px;margin:24px auto;border-radius:16px;padding:20px}
+  .modal h2{margin:0 0 4px;font-size:19px}
+  .fl{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+  .score{font-weight:800;color:var(--grn);font-size:15px}
+  @media(max-width:640px){.hidesm{display:none}}
+</style>
+</head>
+<body>
+<header>
+  <div class="t">
+    <span style="font-size:24px">🎓</span>
+    <div style="flex:1">
+      <h1>Voyage</h1>
+      <div class="sub">India → Italy admissions console · offline · your data stays in this browser</div>
+    </div>
+    <button class="btn ghost" id="bBackup">⇄ Backup</button>
+  </div>
+</header>
+<nav>
+  <button data-p="dash" class="on">Dashboard</button>
+  <button data-p="students">Students</button>
+  <button data-p="match">Shortlist</button>
+  <button data-p="pipe">Pipeline</button>
+  <button data-p="msg">Updates</button>
+  <button data-p="guide">Playbook</button>
+</nav>
+<div class="wrap">
+
+<!-- DASHBOARD -->
+<div class="pane on" id="p-dash">
+  <div class="kpis">
+    <div class="kpi"><b id="k1">0</b><span>Students</span></div>
+    <div class="kpi"><b id="k2">0</b><span>Applications</span></div>
+    <div class="kpi"><b id="k3">0</b><span>Admits</span></div>
+    <div class="kpi"><b id="k4">0</b><span>Docs pending</span></div>
+    <div class="kpi"><b id="k5">67</b><span>Universities</span></div>
+  </div>
+  <div class="card">
+    <h3>⏰ Next actions</h3>
+    <div id="actions"></div>
+  </div>
+  <div class="card">
+    <h3>👥 Students by stage</h3>
+    <div id="stageList"></div>
+  </div>
+</div>
+
+<!-- STUDENTS -->
+<div class="pane" id="p-students">
+  <div class="card">
+    <h3>➕ Add / edit student</h3>
+    <div class="grid">
+      <div><label>Full name</label><input id="s_name" placeholder="e.g. Ananya Sharma"></div>
+      <div><label>WhatsApp (with country code)</label><input id="s_phone" placeholder="+9198…"></div>
+      <div><label>Email</label><input id="s_email" placeholder="student@mail.com"></div>
+      <div><label>Applying for</label><select id="s_level"><option value="master">Master (LM)</option><option value="bachelor">Bachelor (L)</option></select></div>
+      <div><label>Field / subject interest</label><input id="s_field" placeholder="e.g. Data Science, Mechanical, Medicine"></div>
+      <div><label>Intake</label><input id="s_intake" placeholder="2026/27"></div>
+      <div><label>10th %</label><input id="s_m10" type="number" placeholder="85"></div>
+      <div><label>12th %</label><input id="s_m12" type="number" placeholder="82"></div>
+      <div><label>UG % / CGPA (for Master)</label><input id="s_ug" placeholder="7.8 CGPA"></div>
+      <div><label>Backlogs</label><input id="s_back" type="number" placeholder="0"></div>
+      <div><label>English proof</label><select id="s_eng"><option>IELTS</option><option>TOEFL</option><option>PTE</option><option>Duolingo</option><option>MOI letter</option><option>None yet</option></select></div>
+      <div><label>English score</label><input id="s_engs" placeholder="6.5"></div>
+      <div><label>Family income (₹ LPA) — drives ISEE/DSU</label><input id="s_inc" placeholder="4.5"></div>
+      <div><label>Group chat link (WhatsApp group invite)</label><input id="s_group" placeholder="https://chat.whatsapp.com/…"></div>
+    </div>
+    <div class="fl">
+      <button class="btn p" id="sSave">Save student</button>
+      <button class="btn g" id="sClear">Clear form</button>
+      <span class="muted" id="sEditing"></span>
+    </div>
+  </div>
+  <div class="card"><h3>📋 All students</h3><div id="studentList"></div></div>
+</div>
+
+<!-- MATCH -->
+<div class="pane" id="p-match">
+  <div class="warn">Shortlist searches <b>only English-taught</b> programmes across all 67 Italian public universities. Fit score = subject keyword match + level + data confidence. Always confirm on the university's official page before applying.</div>
+  <div class="card">
+    <div class="grid">
+      <div><label>Student</label><select id="m_student"></select></div>
+      <div><label>Search subject / keyword</label><input id="m_kw" placeholder="data science, mechanical, medicine…"></div>
+      <div><label>Level</label><select id="m_level"><option value="">Any</option><option value="master">Master</option><option value="bachelor">Bachelor</option></select></div>
+      <div><label>Region</label><select id="m_reg"><option value="">All regions</option></select></div>
+    </div>
+    <div class="fl"><button class="btn p" id="mGo">Find matches</button><span class="muted" id="mCount"></span></div>
+  </div>
+  <div id="matchList"></div>
+</div>
+
+<!-- PIPELINE -->
+<div class="pane" id="p-pipe">
+  <div class="card">
+    <h3>🗂 Application pipeline</h3>
+    <div class="muted" style="margin-bottom:8px">Change a status to move the student forward. Deadlines show in Next actions.</div>
+    <div style="overflow-x:auto"><table id="pipeTable"></table></div>
+  </div>
+</div>
+
+<!-- UPDATES -->
+<div class="pane" id="p-msg">
+  <div class="warn"><b>How this works:</b> Voyage writes the update text and opens WhatsApp / Telegram / email with it pre-filled — you press send. Fully automatic sending (WhatsApp QR bot, auto-alerts) needs a server + WhatsApp Business API; that's phase 2, see Playbook.</div>
+  <div class="card">
+    <div class="grid">
+      <div><label>Student</label><select id="u_student"></select></div>
+      <div><label>Update type</label><select id="u_type">
+        <option value="status">Full status summary</option>
+        <option value="docs">Missing documents reminder</option>
+        <option value="admit">Admission received 🎉</option>
+        <option value="scholar">Scholarship / DSU reminder</option>
+        <option value="visa">Visa step update</option>
+      </select></div>
+    </div>
+    <div style="margin-top:10px"><label>Message (edit freely)</label><textarea id="u_text" style="min-height:190px"></textarea></div>
+    <div class="fl">
+      <button class="btn p" id="uWA">📱 WhatsApp student</button>
+      <button class="btn p" id="uGroup">👨‍👩‍👧 Open group</button>
+      <button class="btn g" id="uTG">✈️ Telegram</button>
+      <button class="btn g" id="uMail">✉️ Email</button>
+      <button class="btn g" id="uCopy">⧉ Copy</button>
+    </div>
+  </div>
+</div>
+
+<!-- GUIDE -->
+<div class="pane" id="p-guide">
+  <div class="warn">Reference checklist built for Indian applicants. Figures marked <b>(verify)</b> change yearly — always confirm with the consulate/university for the current intake.</div>
+  <div class="card"><h3>🇮🇹 The A→Z process</h3><div id="guideSteps"></div></div>
+  <div class="card"><h3>💰 Scholarships that actually matter</h3><div id="guideSch"></div></div>
+  <div class="card"><h3>🛂 Visa &amp; finance</h3><div id="guideVisa"></div></div>
+  <div class="card"><h3>🚀 Phase 2 — what needs a server</h3><div id="guideP2"></div></div>
+</div>
+</div>
+
+<!-- STUDENT DETAIL MODAL -->
+<div class="mask" id="mask"><div class="modal" id="modal"></div></div>
+
+<script>
+const UNIS = [
+ {c:"UNIBA",n:"Università di Bari Aldo Moro",city:"Bari, Puglia",v:1,
+  l:["Limited — English offering mainly in Economics & Science"],
+  m:["Physics","Material Science and Technology","Decision Science","Philosophy, Politics and Economics in Med (PPE)","Innovation Development in Agrifood Systems (CLM IDEAS)"]},
+ {c:"POLIBA",n:"Politecnico di Bari",city:"Bari, Puglia",l:[],
+  m:["Mechanical Engineering (EN track)","Electrical / Telecommunications Engineering (selected)","Building Engineering / Architecture (selected)"]},
+ {c:"UNIBAS",n:"Università della Basilicata",city:"Potenza, Basilicata",l:[],
+  m:["Mediterranean Forestry & Natural Resources (MEDfOR, Erasmus Mundus)"]},
+ {c:"UNIBG",n:"Università di Bergamo",city:"Bergamo, Lombardia",v:1,
+  l:["Engineering and Management for Health"],
+  m:["Management Engineering","Mechatronics and Smart Technology Engineering","Economics and Finance","Economics and Data Analysis","Management, Marketing and Finance","Business Administration, Professional and Managerial Accounting","Clinical Psychology for Individuals, Families and Organizations","Engineering and Management for Health"]},
+ {c:"UNIBO",n:"Alma Mater – Università di Bologna",city:"Bologna, Emilia-Romagna",big:true,med:true,v:1,
+  l:["Business and Economics","Economics and Business – Management","Economics and Finance","Economics, Politics and Social Sciences","International Studies","Genomics","Statistical Sciences","International Tourism and Leisure Industries"],
+  m:["Artificial Intelligence","Bioinformatics","Astrophysics and Cosmology","Advanced Methods in Particle Physics","Advanced Spectroscopy in Chemistry","Aerospace Engineering","Automation Engineering","Biomedical Engineering","Advanced Automotive Engineering","Advanced Cosmetic Sciences","Chemical Innovation and Regulation","Low Carbon Technologies and Sustainable Chemistry","Mathematics","Mechanical Engineering for Sustainability","Environmental Assessment and Management","Resource Economics and Sustainable Development","Science of Climate","Applied Economics and Markets","Business Administration (International Management / Service Management)","Business Analytics and Data Science","Economics and Econometrics","Data Science and Business Analytics","Digital Humanities and Digital Knowledge","Fashion Studies","Food Safety and Food Risk Management","Medical Biotechnology","Health Economics and Management","Language, Society and Communication","Specialized Translation","Legal Studies","Law, Economics and Governance","Tourism Economics and Management","International Cooperation on Human Rights and Intercultural Heritage","Precise and Sustainable Agriculture","🩺 Medicine and Surgery (LM CU, English)"]},
+ {c:"UNIBS",n:"Università di Brescia",city:"Brescia, Lombardia",med:true,v:1,l:[],
+  m:["Analytics and Data Science for Economics and Management","Communication Technologies and Multimedia","Civil and Environmental Engineering","Management","🩺 Medicine and Surgery (LM CU, English)"]},
+ {c:"UNICA",n:"Università di Cagliari",city:"Cagliari, Sardegna",v:1,l:[],
+  m:["Computer Engineering, Cybersecurity and Artificial Intelligence","Informatics","Finance and Data Science","Biomedical Engineering","Chemical and Biotechnological Process Engineering","Civil Engineering","Electrical Engineering","Electronic Engineering","Environmental Engineering for Sustainable Development","Internet Engineering"]},
+ {c:"UNICAL",n:"Università della Calabria",city:"Arcavacata di Rende (CS), Calabria",med:true,v:1,l:[],
+  m:["Artificial Intelligence and Computer Science","Computer Engineering for the Internet of Things","Robotics and Automation Engineering","Mechanical Engineering","Telecommunication Engineering – Smart Sensing, Computing and Networking","Civil Engineering for Infrastructural Regeneration","Environmental and Territorial Safety Engineering","Mathematics","Physics","Chemistry","Health Biotechnology","Nutritional Sciences","Finance and Insurance","Management Engineering","🩺 Medicine and Surgery (English-taught)"]},
+ {c:"UNICAM",n:"Università di Camerino",city:"Camerino, Marche",v:1,
+  l:["Computer Science (EN)"],
+  m:["Computer Science","Chemistry","Mathematics and Applications","Physics","Biological Sciences","Geoenvironmental Resources and Risks","Architecture (international, LM CU)"]},
+ {c:"UNICAMPANIA",n:"Università 'Luigi Vanvitelli'",city:"Caserta / Napoli, Campania",med:true,v:1,l:[],
+  m:["Data Science","🩺 Medicine and Surgery (English-taught, LM CU)"]},
+ {c:"UNICAS",n:"Università di Cassino e del Lazio Meridionale",city:"Cassino, Lazio",v:1,l:[],
+  m:["Global Economy and Business","Economics and Entrepreneurship","Sport Management","Civil and Environmental Engineering","Mechanical Engineering","Telecommunications Engineering"]},
+ {c:"UNICT",n:"Università di Catania",city:"Catania, Sicilia",med:true,v:1,
+  l:["Physics (EN)"],
+  m:["Physics","Data Science","Automation Engineering and Control of Complex Systems","Chemical Engineering for Industrial Sustainability","Communications Engineering","Electrical Engineering for Sustainable Green Energy Transition","Electronic Engineering","Construction Management and Safety","Nuclear Phenomena and Their Applications","Agricultural Science and Technology","Global Politics and Euro-Mediterranean Relations","Heritage and Development","🩺 Medicine and Surgery (English-taught)"]},
+ {c:"UNICZ",n:"Università 'Magna Græcia' di Catanzaro",city:"Catanzaro, Calabria",med:true,v:1,l:[],
+  m:["🩺 Medicine and Surgery (English-taught, LM CU)"]},
+ {c:"UNICH",n:"Università 'G. d'Annunzio' Chieti-Pescara",city:"Chieti-Pescara, Abruzzo",med:true,l:[],
+  m:["🩺 Medicine and Surgery (English-taught, LM CU)","Economics / Data Analytics for Business (selected)"]},
+ {c:"UNIFE",n:"Università di Ferrara",city:"Ferrara, Emilia-Romagna",v:1,
+  l:["Sustainable Industrial & Environmental Engineering"],
+  m:["Physics","Economics, Management and Policies for Global Challenges","Small Business Management in International Markets","Green Economy and Sustainable Transitions","Architecture (EN, LM CU)"]},
+ {c:"UNIFI",n:"Università di Firenze",city:"Firenze, Toscana",big:true,v:1,
+  l:["Bioengineering / selected science"],
+  m:["Geoengineering","Mechanical Engineering for Sustainability","Management Engineering","Computer Science – Resilient and Secure Cyber Physical Systems","Software – Science and Technology","Advanced Molecular Sciences","Economics and Development","Finance and Risk Management","International Relations and European Studies","Geography, Spatial Management and Heritage for International Cooperation","Design of Sustainable Tourism Systems"]},
+ {c:"UNIFG",n:"Università di Foggia",city:"Foggia, Puglia",l:[],
+  m:["Food Science & Technology / Agricultural Science (selected)"]},
+ {c:"UNIGE",n:"Università di Genova",city:"Genova, Liguria",big:true,v:1,
+  l:["Maritime Science & Technology / selected engineering"],
+  m:["Bioengineering","Computer Engineering","Computer Science","Internet and Multimedia Engineering","Electronic Engineering","Energy Engineering","Environmental Engineering","Engineering for Natural Risk Management","Building Engineering","Safety Engineering for Transport, Logistics and Production","Engineering Technology for Strategy and Security (Strategos)","Architectural Composition","Yacht Design","Economics and Data Science","Management for Energy and Environmental Transition (MEET)","Sustainable Polymer and Process Chemistry","Medical-Pharmaceutical Biotechnology"]},
+ {c:"UNIVAQ",n:"Università dell'Aquila",city:"L'Aquila, Abruzzo",v:1,
+  l:["Computer Science (EN)"],
+  m:["Computer Science","Computer and Systems Engineering","Control Systems and Automation Engineering","Telecommunications Engineering","Mathematics","Mathematical Engineering (RealMaths Double MSc)","Mathematical Modelling (MathMods Joint)","InterMaths Erasmus Mundus Joint Master","Applied Data Science","Atmospheric Science and Technology","Physics","Neurosciences"]},
+ {c:"UNISALENTO",n:"Università del Salento",city:"Lecce, Puglia",v:1,l:[],
+  m:["Aerospace Engineering","Communication Engineering and Electronic Technologies","Materials Engineering and Nanotechnology","Management Engineering","Coastal and Marine Biology and Ecology","Technical Translation and Interpreting"]},
+ {c:"UNIMC",n:"Università di Macerata",city:"Macerata, Marche",v:1,l:[],
+  m:["International Relations","International Finance and Economics","International Tourism and Destination Management"]},
+ {c:"UNIME",n:"Università di Messina",city:"Messina, Sicilia",v:1,l:[],
+  m:["Data Science","Physics (Condensed Matter Physics)","Geophysical Sciences for Seismic Risk"]},
+ {c:"UNIMI",n:"Università di Milano (La Statale)",city:"Milano, Lombardia",big:true,med:true,v:1,
+  l:["International Politics, Law & Economics (IPLE)","Cognitive Science","Music Information Science (selected)"],
+  m:["Computer Science","Artificial Intelligence for Science and Technology","Human-Centered Artificial Intelligence","Bioinformatics for Computational Genomics","Biomedical Omics","Biotechnology for the Bioeconomy","Medical Biotechnology and Molecular Medicine","Molecular Biology of the Cell","Molecular Biotechnology and Bioinformatics","Pharmaceutical Biotechnology","Chemistry","Cosmetic Industrial Science","Crops and Plant Sciences","Geophysics","Environmental Change and Global Sustainability","Environmental and Food Economics","Global Environment and Development","Sustainable Natural Resource Management","Valorization and Sustainable Development of Mountain Areas","Law and Sustainable Development","Economics and Political Science","Finance and Economics","Global Politics and Society","International Relations","Migration Studies and New Societies","Politics, Philosophy and Public Affairs","Management of Human Resources","Management of Innovation and Entrepreneurship","Public and Corporate Communication","Philosophical Sciences","Cultural, Intellectual and Visual History","🩺 Medicine and Surgery (International Medical School)"]},
+ {c:"POLIMI",n:"Politecnico di Milano",city:"Milano, Lombardia",big:true,v:1,
+  l:["Civil Engineering","Engineering Science","Industrial Engineering","Process Engineering","Architectural Design","Interaction Design"],
+  m:["Aeronautical Engineering","Space Engineering","Automation and Control Engineering","Biomedical Engineering","Chemical Engineering","Civil Engineering","Civil Engineering for Risk Mitigation","Computer Science and Engineering","High Performance Computing Engineering","Cyber Risk, Strategy and Governance","Geoinformatics Engineering","Telecommunication / Music and Acoustic Engineering","Environmental and Land Planning Engineering","Agricultural Engineering","Building Engineering for Sustainability","Architectural Engineering","Engineering Physics","Materials Engineering and Nanotechnology","Mathematical Engineering","Bioinformatics for Computational Genomics","Management Engineering","Management of Built Environment","Industrial Safety and Risk Engineering","Food Engineering","Architecture","Architectural Design and History","Urban Planning and Policy Design","Communication Design","Digital and Interaction Design","Design and Engineering","Design for the Fashion System","Transformative Sustainability"]},
+ {c:"UNIMIB",n:"Università di Milano-Bicocca",city:"Milano, Lombardia",big:true,med:true,v:1,
+  l:["Artificial Intelligence (with UNIMI/UNIPV)","selected science"],
+  m:["Astrophysics and Space Physics","Materials Science and Nanotechnology","Mathematics","Physics","Artificial Intelligence for Science and Technology","Data Science","Human-Centered Artificial Intelligence","Economics and Technologies for Sustainability","International Economics","Applied Experimental Psychological Sciences","Optometry and Vision Science","Marine Sciences","Marketing and Global Markets","🩺 Medicine and Surgery (English-taught)"]},
+ {c:"UNIMORE",n:"Università di Modena e Reggio Emilia",city:"Modena / Reggio Emilia, E-R",big:true,v:1,
+  l:["Digital Education (selected)"],
+  m:["Advanced Automotive Engineering","Electronic Engineering","Digital Automation Engineering","Artificial Intelligence Engineering","Physics","International Management","Economics, Public Policy and Sustainability","Food Safety and Food Risk Management","Languages for Communication in International Enterprises and Organisations"]},
+ {c:"UNIMOL",n:"Università del Molise",city:"Campobasso, Molise",l:[],
+  m:["Food Science / selected science in English"]},
+ {c:"UNINA",n:"Università di Napoli Federico II",city:"Napoli, Campania",big:true,med:true,v:1,
+  l:["Selected engineering / science"],
+  m:["Mathematical Engineering","Industrial Bioengineering","Industrial Chemistry for Circular and Bio Economy","Sustainable Ship and Shipping 4.0","Design for the Built Environment","Volcanology","Precision Livestock Farming","Hospitality and Destination Management","International Relations","🩺 Medicine and Surgery (English-taught, LM CU)"]},
+ {c:"UNIOR",n:"Università 'L'Orientale' di Napoli",city:"Napoli, Campania",l:[],
+  m:["International Relations (English-medium track)","Asian and African Relations and Institutions","Comparative Literature / Specialised Translation (selected English)"]},
+ {c:"UNIPARTHENOPE",n:"Università di Napoli 'Parthenope'",city:"Napoli, Campania",v:1,
+  l:["Management of Enterprises (selected)"],
+  m:["Applied Computer Science","Management Engineering","Marketing and International Management","Fashion, Art and Food Management","Entrepreneurship and Innovation Management (with MIT Sloan)"]},
+ {c:"UNIVPM",n:"Università Politecnica delle Marche",city:"Ancona, Marche",med:true,v:1,
+  l:["Biomedical Engineering / International Economics & Commerce"],
+  m:["Biomedical Engineering","Environmental Engineering","Green Industrial Engineering","International Economics and Commerce (IEC)","Food and Beverage Innovation and Management","🩺 Medicine and Surgery (English-taught)"]},
+ {c:"UNIPD",n:"Università di Padova",city:"Padova, Veneto",big:true,med:true,v:1,
+  l:["Information Engineering","Psychological Science","Animal Care","Sustainable Agriculture","Techniques and Management of Animal Production"],
+  m:["Astrophysics and Cosmology","ALGANT – Algebra, Geometry and Number Theory","Applied Economics","Computational Finance","Accounting, Finance and Business Consulting","Management Engineering","Mathematical Engineering – Financial Engineering","Data Science","Cybersecurity","Computer Science","Computer Engineering","Control Systems Engineering","ICT for Internet and Multimedia","Aerospace Engineering","Electrical Engineering","Electronic Engineering","Energy Engineering","Environmental Engineering","Chemical and Process Engineering","Water and Geological Risk Engineering","Food Engineering","Complex and Data Driven Chemistry","Environmental Sciences for Ecological Transition","Marine Biology","Forest Sciences / Global Forestry","Sustainable Agriculture","Biotechnologies for Food Science","Medical / Pharmaceutical Biotechnologies","Cognitive Neuroscience and Clinical Neuropsychology","Cognitive Science for Human-Centric Technologies","English Studies","Human Rights and Multi-level Governance","Management for Sustainable Firms","Italian Food and Wine","🩺 Medicine and Surgery (English-taught, LM CU)"]},
+ {c:"UNIPA",n:"Università di Palermo",city:"Palermo, Sicilia",v:1,l:[],
+  m:["Management Engineering","Electronics Engineering","Electronics and Telecommunications Engineering","Data, Algorithms and Machine Intelligence","Spatial Planning","Mediterranean Food Science and Technology","Business and Economic Sciences – Entrepreneurship and Management","Economic and Financial Sciences – Economic and Financial Analysis","Complex Administrations and Organizations Science – Public Management","International Relations (MAIR)","International Relations, Politics and Trade","Cooperation, Development and Migrations","Transnational German Studies","Tourism Systems and Hospitality Management","Neurosciences"]},
+ {c:"UNIPR",n:"Università di Parma",city:"Parma, Emilia-Romagna",v:1,l:[],
+  m:["Advanced Automotive Engineering","Advanced Automotive Electronic Engineering","Electronic Engineering for Intelligent Vehicles","Communication Engineering","Electric Vehicle Engineering","Engineering for the Food Industry","Food Sciences for Innovation and Authenticity","Global Food Law – Sustainability Challenges and Innovation","International Business and Development","Architecture and City Sustainability","Language Sciences and Cultural Studies for Special Needs"]},
+ {c:"UNIPV",n:"Università di Pavia",city:"Pavia, Lombardia",big:true,med:true,v:1,
+  l:["Bioinformatics","Electronic & Computer Engineering","Artificial Intelligence (with UNIMI/UNIMIB)"],
+  m:["Computer Engineering","Electronic Engineering","Electrical Engineering","Industrial Automation Engineering","Civil Engineering for Mitigation of Risk from Natural Hazards","Economics, Finance and International Integration","International Business and Entrepreneurship","World Politics and International Relations","Molecular Biology and Genetics","Psychology, Neuroscience and Human Sciences","The Ancient Mediterranean World: History, Archaeology and Art","🩺 Medicine and Surgery ('Harvey' course, English)"]},
+ {c:"UNIPG",n:"Università di Perugia",city:"Perugia, Umbria",med:true,v:1,
+  l:["Selected economics / science"],
+  m:["Agricultural and Environmental Biotechnology","Geology for Energy Resources","Medical, Veterinary or Forensic Biotechnological Sciences","🩺 Medicine and Surgery (English-taught, LM CU)"]},
+ {c:"UNISTRAPG",n:"Università per Stranieri di Perugia",city:"Perugia, Umbria",l:[],
+  m:["International Relations / Made in Italy (some EN components)"]},
+ {c:"UNIPI",n:"Università di Pisa",city:"Pisa, Toscana",big:true,v:1,
+  l:["Selected Engineering & Business Economics tracks"],
+  m:["Artificial Intelligence and Data Engineering","Computer Engineering","Computer Science","Computer Science and Networking","Cybersecurity","Data Science and Business Informatics","Aerospace Engineering","Bionics Engineering","Materials and Nanotechnology","Nuclear Engineering","Paper and Cardboard Engineering","Neuroscience","Economics","Exploration and Applied Geophysics","Risk Management"]},
+ {c:"UPO",n:"Università del Piemonte Orientale",city:"Vercelli / Novara / Alessandria",med:true,v:1,l:[],
+  m:["Medical Biotechnologies","Food, Health and Environment","EMOTION – European MSc in Skin Health and Care","🩺 Medicine and Surgery (English-taught, LM CU – Novara)"]},
+ {c:"UNIRC",n:"Università 'Mediterranea' di Reggio Calabria",city:"Reggio Calabria, Calabria",l:[],
+  m:["Civil/Environmental Engineering, Architecture (selected)"]},
+ {c:"UNIROMA1",n:"Sapienza Università di Roma",city:"Roma, Lazio",big:true,med:true,v:1,
+  l:["Applied Computer Science and Artificial Intelligence","Classics","Global Humanities","Sustainable Building Engineering","Nursing","Molecular Biology, Medicinal Chemistry and Computer Science for Pharmaceutical Applications"],
+  m:["Artificial Intelligence","Artificial Intelligence and Robotics","Computer Science","Engineering in Computer Science","Control Engineering","Cybersecurity","Data Science","Nanotechnology Engineering","Aeronautical Engineering","Chemical Engineering","Electronics Engineering","Energy Engineering","Green Industrial Engineering for Sustainable Development","Environmental and Sustainable Building Engineering","Management Engineering","Astronomy and Astrophysics","Biochemistry","Genetics and Molecular Biology","Neurobiology","Cognitive Neuroscience","Cognitive Forensic Sciences","Archaeological Materials Science","Business Management","Economics and Communication for Management and Innovation","Finance and Insurance","Financial Institutions, International Finance and Risk Management","Actuarial and Financial Sciences","Health Economics","Development and International Cooperation Sciences","English and Anglo-American Studies","Oriental Languages and Cultures","Fashion Studies","Design, Multimedia and Visual Communication","Product and Service Design","Landscape Architecture","Architecture (Conservation)","Architecture – Urban Regeneration","Science and Technology for the Conservation of Cultural Heritage","CO2 Geological Storage","🩺 Medicine and Surgery (English-taught, LM CU)"]},
+ {c:"UNIROMA2",n:"Università di Roma 'Tor Vergata'",city:"Roma, Lazio",big:true,med:true,v:1,
+  l:["Global Governance","Engineering Sciences","Business Administration & Economics"],
+  m:["Economics","Finance and Banking","European Economy and Business Law","Business Administration","Development Economics and International Co-operation (MESCI)","Management Engineering","Public Procurement Management","Tourism Strategy, Cultural Heritage and Made in Italy","ICT and Internet Engineering","Mechatronics Engineering","Astrophysics and Space Science","Physics of Complex Systems and Big Data","Physics of Fundamental Interactions and Experimental Techniques","Chemistry for Nano-Engineering","Biotechnology","Art History in Rome from Late Antiquity to the Present","European History","Clinical Psychosexology","Physical Activity and Health Promotion","🩺 Medicine and Surgery (English-taught)"]},
+ {c:"UNIROMA3",n:"Università Roma Tre",city:"Roma, Lazio",v:1,
+  l:["Selected economics / political science"],
+  m:["International Studies","Biomedical Engineering","Sustainable Coastal and Ocean Engineering","Law and New Technologies"]},
+ {c:"FORO",n:"Università di Roma 'Foro Italico' (Sport Science)",city:"Roma, Lazio",l:[],
+  m:["Sport Science / Health & Physical Activity (selected EN modules)"]},
+ {c:"UNISA",n:"Università di Salerno",city:"Fisciano (SA), Campania",v:1,l:[],
+  m:["Business Innovation and Informatics","Computer Science – Internet of Things","Information Engineering for Digital Medicine","Food Engineering"]},
+ {c:"UNISANNIO",n:"Università del Sannio",city:"Benevento, Campania",l:[],
+  m:["Energy Engineering / Electronic Engineering (selected)"]},
+ {c:"UNISS",n:"Università di Sassari",city:"Sassari, Sardegna",v:1,l:[],
+  m:["Economics","Chemical Sciences","Animal Production Sciences","Wildlife Management, Conservation and Control","Innovation Management for Sustainable Tourism","Planning and Policies for the City, Environment and Landscape"]},
+ {c:"UNISI",n:"Università di Siena",city:"Siena, Toscana",med:true,v:1,
+  l:["Economics & Banking, Economics & Management (selected)"],
+  m:["Economics","Finance","International Accounting and Management","Engineering Management","Applied Mathematics","Artificial Intelligence and Automation Engineering","Electronics and Communications Engineering","Chemistry","Medical Biotechnologies","Sustainable Industrial Pharmaceutical Biotechnology","Biotechnologies of Human Reproduction","Biodiversity, Conservation and Environmental Quality","International Studies","Language and Mind – Linguistics and Cognitive Studies","Public and Cultural Diplomacy","🩺 Medicine and Surgery (English-taught)"]},
+ {c:"UNISTRASI",n:"Università per Stranieri di Siena",city:"Siena, Toscana",l:[],
+  m:["Italian language & culture focus; some EN master modules"]},
+ {c:"UNITE",n:"Università di Teramo",city:"Teramo, Abruzzo",v:1,l:[],
+  m:["Food Science and Technology","Reproductive Biotechnologies"]},
+ {c:"UNITO",n:"Università di Torino",city:"Torino, Piemonte",big:true,med:true,v:1,
+  l:["Business & Management","Economics and Finance with Data Science","Global Law and Transnational Legal Studies"],
+  m:["Area and Global Studies for International Cooperation","Artificial Intelligence and High Performance Computing Technologies","Artificial Intelligence for Biomedicine and Healthcare","Biotechnological and Chemical Sciences in Diagnostics","Biotechnology for Neuroscience","Business Administration","Cellular and Molecular Biology","Cultural Heritage and Creativity for Tourism","Digital Skills for Sustainable Societal Transition","Economics","Economic Analysis and Policy","Economics of Innovation for Sustainable Development","English and American Studies","European Legal Studies","Food Science and Technology","Language Technologies and Digital Humanities","Materials Science","Molecular Biotechnology","Quantitative Finance and Insurance","Stochastics and Data Science","🩺 Medicine and Surgery (English-taught, LM CU)"]},
+ {c:"POLITO",n:"Politecnico di Torino",city:"Torino, Piemonte",big:true,med:true,v:1,
+  l:["Engineering (selected first-year English tracks)"],
+  m:["Aerospace / Automotive Engineering","Building Engineering","Civil Engineering","Chemical and Sustainable Processes Engineering","Communications Engineering","Electrical Engineering","Electronic Engineering","Energy and Nuclear Engineering","Computer Engineering","Cybersecurity Engineering","Data Science and Engineering","ICT for Smart Societies","Nanotechnologies for ICT","Quantum Engineering","Physics of Complex Systems","Digital Skills for Sustainable Societal Transitions","Environmental and Land Engineering","Industrial Production and Technological Innovation Engineering","Industrial Chemistry for Circular and Bio Economy","Geography and Territorial Sciences","Architecture Construction City","Architecture for Heritage","Architecture for Sustainability","Systemic Design","Urban and Regional Planning","🩺 Medicine and Surgery / MEDTEC (with Humanitas)"]},
+ {c:"UNITN",n:"Università di Trento",city:"Trento, Trentino-Alto Adige",big:true,v:1,
+  l:["Computer, Communications & Electronics Engineering (selected)"],
+  m:["Computer Science","Artificial Intelligence Systems (AIS)","Data Science","Human Computer Interaction","Information Engineering","Energy Engineering","Environmental Engineering","Engineering for Environmental Sustainability and International Cooperation (EESIC)","Materials Engineering","Management and Industrial Systems Engineering (MISE)","Bioengineering for Personalized Medicine (B4PM)","Mathematics","Physics","Environmental Meteorology and Climate Physics","Quantitative and Computational Biology (QCB)","Cellular and Molecular Biotechnology (CMB)","Cognitive Science","Behavioural and Applied Economics (BEA)","European and International Studies (MEIS)","International Security Studies (MISS)","International Master Security, Intelligence and Strategic Studies (IMSISS)","Sociology and Social Research","European Master in Business Studies (EMBS)","Innovation Management","International Management","Agrifood Innovation Management (AIM)","Global Law Making"]},
+ {c:"UNITS",n:"Università di Trieste",city:"Trieste, Friuli-V.G.",v:1,l:[],
+  m:["Data Science and Artificial Intelligence","Scientific and Data-Intensive Computing","Mathematics","Medical Physics","Neuroscience","Geophysics and Geodata"]},
+ {c:"UNIUD",n:"Università di Udine",city:"Udine, Friuli-V.G.",v:1,
+  l:["Selected"],
+  m:["Artificial Intelligence and Cybersecurity","International Marketing, Management and Organization","Management Engineering","Industrial Engineering for Sustainable Manufacturing","Molecular Biotechnology","Economics"]},
+ {c:"UNIINSUBRIA",n:"Università dell'Insubria",city:"Varese / Como, Lombardia",med:true,v:1,l:[],
+  m:["Computer Science","Mathematics","Physics","Biomedical Sciences","Biotechnology for the Bio-based and Health Industry","Global Entrepreneurship, Economics and Management","🩺 Medicine and Surgery (English-taught, LM CU)"]},
+ {c:"UNIURB",n:"Università di Urbino 'Carlo Bo'",city:"Urbino, Marche",l:[],
+  m:["Economics & Management / Applied Computer Science (EN curricula)"]},
+ {c:"UNIVE",n:"Università Ca' Foscari Venezia",city:"Venezia, Veneto",big:true,v:1,
+  l:["Philosophy, International & Digital Communication","Economics & Business (selected curricula)"],
+  m:["Economics, Finance and Sustainability","Global Accounting and Finance","Global Development and Entrepreneurship","International Management","Data Analytics for Business and Society","Economics and Management of Arts and Cultural Activities","Innovation and Management of Culture and Creativity","Tourism Management and Sustainability","Comparative International Relations","Conservation Science and Technology for Cultural Heritage","European, American and Postcolonial Language and Literature","Languages of Asia for Business and International Cooperation","Digital and Public Humanities","Environmental Humanities","Language Sciences","Computer Science and Information Technology","Environmental Sciences","Engineering Physics","Science and Technology of Bio and Nanomaterials","Sustainable Chemistry and Technologies"]},
+ {c:"IUAV",n:"Università Iuav di Venezia",city:"Venezia, Veneto",v:1,l:[],
+  m:["Architecture","Architecture Design","Curatorship of Architecture and Design"]},
+ {c:"UNIVR",n:"Università di Verona",city:"Verona, Veneto",med:true,v:1,
+  l:["Economics, Bioinformatics (selected)"],
+  m:["Artificial Intelligence","Molecular and Medical Biotechnology","Medical Bioinformatics","Biology for Translational Research and Precision Medicine","International Business and Global Affairs","Comparative European and Non-European Languages and Literatures","Languages, Literatures and Digital Culture","Linguistics","🩺 Medicine and Surgery (English-taught, LM CU)"]},
+ {c:"UNITUS",n:"Università della Tuscia",city:"Viterbo, Lazio",v:1,l:[],
+  m:["Mechanical Engineering","Economics and Communication for Management and Innovation","Marine Biology and Ecology","Plant Biotechnology for Food and Global Health","Forestry and Environmental Sciences","Security and Human Rights","Skilling, Upskilling, Reskilling – Sustainable Energy"]},
+ {c:"SNS",n:"Scuola Normale Superiore",city:"Pisa — elite/postgrad",big:true,l:[],
+  m:["Honours courses (with UNIPI) + PhD: Physics, Maths, Neuroscience, Cultural Studies, Political Science & Sociology"]},
+ {c:"SSSA",n:"Scuola Superiore Sant'Anna",city:"Pisa — elite/postgrad",big:true,l:[],
+  m:["Integrated honours + PhD: Biorobotics, Economics, Management, Agricultural Science, Law, Data Science"]},
+ {c:"IMT",n:"Scuola IMT Alti Studi Lucca",city:"Lucca — postgrad",l:[],
+  m:["PhD (EN): Economics, Computer Science, Cognitive & Cultural Systems, Systems Science"]},
+ {c:"SISSA",n:"Scuola Internazionale Superiore di Studi Avanzati",city:"Trieste — postgrad",l:[],
+  m:["Master's & PhD (EN): Physics, Mathematics, Neuroscience, Data Science"]},
+ {c:"GSSI",n:"Gran Sasso Science Institute",city:"L'Aquila — postgrad",l:[],
+  m:["PhD (EN): Physics, Mathematics, Computer Science, Urban Studies & Regional Science"]},
+ {c:"IUSS",n:"Istituto Universitario di Studi Superiori (IUSS)",city:"Pavia — postgrad",l:[],
+  m:["Honours courses + PhD (EN): Extremes management, Cognitive Neuroscience (with SNS/Sant'Anna)"]}
+];
+UNIS.forEach((u,i)=>{u.idx=i+1;u.region=u.city.includes('—')?'Special schools':u.city.split(',').pop().trim();});
+
+const DOCS=[
+ ['passport','Passport (valid 2+ years)','Must cover your whole stay'],
+ ['photo','Passport photos (35×45mm)','Visa + Universitaly'],
+ ['m10','10th marksheet',''],
+ ['m12','12th marksheet + certificate','Needed for Bachelor & Master'],
+ ['degree','Degree certificate + all transcripts','Master applicants'],
+ ['english','English proof (IELTS/TOEFL/MOI)','Most unis want IELTS 6.0–6.5'],
+ ['cv','CV / Resume (Europass format best)',''],
+ ['sop','SOP / Motivation letter','Tailor per university'],
+ ['lor','Letters of recommendation (1–2)',''],
+ ['cimea','CIMEA Statement of Comparability OR Declaration of Value','⚠️ Biggest delay — start 2–3 months early'],
+ ['apostille','Apostille / HRD attestation of certificates','Via MEA India'],
+ ['unitaly','Universitaly pre-enrolment submitted','Mandatory before visa'],
+ ['isee','Income + assets docs for ISEE Parificato','Unlocks DSU scholarship + fee waiver'],
+ ['funds','Bank statement / financial proof','Visa financial means (verify amount)'],
+ ['accom','Accommodation proof',''],
+ ['insurance','Health insurance (min €30,000 cover)',''],
+ ['visa','Visa application form + appointment','VFS / Italian consulate']
+];
+
+const STAGES=['Lead','Docs collection','CIMEA / DoV','Applied','Admitted','Universitaly','DSU applied','Visa applied','Visa granted','Departed'];
+
+let DB=load();
+function load(){try{return JSON.parse(localStorage.getItem('voyage_db'))||{students:[]}}catch(e){return {students:[]}}}
+function save(){try{localStorage.setItem('voyage_db',JSON.stringify(DB))}catch(e){alert('Could not save — browser storage blocked.')}renderAll();}
+const $=id=>document.getElementById(id);
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let editingId=null;
+
+/* ---------- nav ---------- */
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('nav button').forEach(x=>x.classList.remove('on'));
+  document.querySelectorAll('.pane').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on');$('p-'+b.dataset.p).classList.add('on');
+});
+
+/* ---------- students ---------- */
+function readForm(){
+  return {name:$('s_name').value.trim(),phone:$('s_phone').value.trim(),email:$('s_email').value.trim(),
+   level:$('s_level').value,field:$('s_field').value.trim(),intake:$('s_intake').value.trim()||'2026/27',
+   m10:$('s_m10').value,m12:$('s_m12').value,ug:$('s_ug').value.trim(),back:$('s_back').value,
+   eng:$('s_eng').value,engs:$('s_engs').value.trim(),inc:$('s_inc').value.trim(),group:$('s_group').value.trim()};
+}
+$('sSave').onclick=()=>{
+  const f=readForm();
+  if(!f.name){alert('Enter a name');return;}
+  if(editingId){Object.assign(DB.students.find(s=>s.id===editingId),f);editingId=null;$('sEditing').textContent='';}
+  else DB.students.push(Object.assign({id:'s'+Date.now(),stage:0,docs:{},apps:[],notes:''},f));
+  clearForm();save();
+};
+function clearForm(){['s_name','s_phone','s_email','s_field','s_intake','s_m10','s_m12','s_ug','s_back','s_engs','s_inc','s_group'].forEach(i=>$(i).value='');editingId=null;$('sEditing').textContent='';}
+$('sClear').onclick=clearForm;
+
+function docsDone(s){return DOCS.filter(d=>s.docs&&s.docs[d[0]]).length;}
+function pct(s){return Math.round(docsDone(s)/DOCS.length*100);}
+
+function renderStudents(){
+  const el=$('studentList');
+  if(!DB.students.length){el.innerHTML='<div class="empty">No students yet. Add one above.</div>';return;}
+  el.innerHTML='';
+  DB.students.forEach(s=>{
+    const d=document.createElement('div');d.className='row';
+    const admits=s.apps.filter(a=>a.status==='Admitted'||a.status==='Enrolled').length;
+    d.innerHTML=`<div class="av">${esc((s.name[0]||'?').toUpperCase())}</div>
+      <div class="nm"><b>${esc(s.name)}</b>
+        <div class="s">${esc(s.field||'—')} · ${s.level==='master'?'Master':'Bachelor'} · ${esc(s.intake)}</div>
+        <div class="bar"><i style="width:${pct(s)}%"></i></div>
+        <div class="s">${docsDone(s)}/${DOCS.length} docs · ${s.apps.length} applications · ${admits} admit(s)</div>
+      </div>
+      <span class="pill ${admits?'st2':(s.stage>2?'st1':'st0')}">${esc(STAGES[s.stage]||'Lead')}</span>
+      <button class="btn g" data-open="${s.id}">Open</button>`;
+    el.appendChild(d);
+  });
+  el.querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>openStudent(b.dataset.open));
+}
+
+/* ---------- student modal ---------- */
+function openStudent(id){
+  const s=DB.students.find(x=>x.id===id);if(!s)return;
+  $('modal').innerHTML=`
+    <h2>${esc(s.name)}</h2>
+    <div class="muted">${esc(s.field||'—')} · ${s.level==='master'?'Master':'Bachelor'} · ${esc(s.intake)} · ${esc(s.phone||'no phone')}</div>
+    <div style="margin-top:14px"><label>Stage</label>
+      <select id="mStage">${STAGES.map((t,i)=>`<option value="${i}" ${s.stage===i?'selected':''}>${i+1}. ${t}</option>`).join('')}</select></div>
+    <h3 style="margin:18px 0 4px;font-size:15px">📄 Document checklist</h3>
+    <div id="mDocs">${DOCS.map(d=>`<label class="chk"><input type="checkbox" data-doc="${d[0]}" ${s.docs&&s.docs[d[0]]?'checked':''}><span>${esc(d[1])}${d[2]?`<span class="why">${esc(d[2])}</span>`:''}</span></label>`).join('')}</div>
+    <h3 style="margin:18px 0 4px;font-size:15px">🎯 Applications (${s.apps.length})</h3>
+    <div id="mApps">${s.apps.length?s.apps.map((a,i)=>`
+      <div class="row"><div class="nm"><b>${esc(a.uni)}</b><div class="s">${esc(a.prog)}</div>
+        <div class="s">Deadline: <input type="date" value="${esc(a.deadline||'')}" data-dl="${i}" style="width:auto;padding:4px 8px;font-size:12px"></div></div>
+        <select data-appst="${i}" style="width:auto">${['Planned','Applied','Admitted','Rejected','Enrolled'].map(t=>`<option ${a.status===t?'selected':''}>${t}</option>`).join('')}</select>
+        <button class="btn d" data-delapp="${i}">✕</button></div>`).join(''):'<div class="muted">None yet — use Shortlist tab to add.</div>'}</div>
+    <div style="margin-top:14px"><label>Notes</label><textarea id="mNotes">${esc(s.notes||'')}</textarea></div>
+    <div class="fl">
+      <button class="btn p" id="mSave">Save</button>
+      <button class="btn g" id="mEdit">Edit profile</button>
+      <button class="btn g" id="mClose">Close</button>
+      <button class="btn d" id="mDel">Delete student</button>
+    </div>`;
+  $('mask').classList.add('on');
+  $('mClose').onclick=()=>$('mask').classList.remove('on');
+  $('mSave').onclick=()=>{
+    s.stage=+$('mStage').value;s.notes=$('mNotes').value;
+    s.docs=s.docs||{};$('mDocs').querySelectorAll('[data-doc]').forEach(c=>s.docs[c.dataset.doc]=c.checked);
+    $('mApps').querySelectorAll('[data-appst]').forEach(sel=>s.apps[+sel.dataset.appst].status=sel.value);
+    $('mApps').querySelectorAll('[data-dl]').forEach(inp=>s.apps[+inp.dataset.dl].deadline=inp.value);
+    $('mask').classList.remove('on');save();
+  };
+  $('mDel').onclick=()=>{if(confirm('Delete '+s.name+'?')){DB.students=DB.students.filter(x=>x.id!==id);$('mask').classList.remove('on');save();}};
+  $('mEdit').onclick=()=>{
+    editingId=s.id;$('s_name').value=s.name;$('s_phone').value=s.phone||'';$('s_email').value=s.email||'';
+    $('s_level').value=s.level;$('s_field').value=s.field||'';$('s_intake').value=s.intake||'';
+    $('s_m10').value=s.m10||'';$('s_m12').value=s.m12||'';$('s_ug').value=s.ug||'';$('s_back').value=s.back||'';
+    $('s_eng').value=s.eng||'IELTS';$('s_engs').value=s.engs||'';$('s_inc').value=s.inc||'';$('s_group').value=s.group||'';
+    $('sEditing').textContent='Editing: '+s.name;
+    $('mask').classList.remove('on');document.querySelector('nav button[data-p="students"]').click();
+  };
+  $('modal').querySelectorAll('[data-delapp]').forEach(b=>b.onclick=()=>{s.apps.splice(+b.dataset.delapp,1);save();openStudent(id);});
+}
+$('mask').onclick=e=>{if(e.target===$('mask'))$('mask').classList.remove('on');};
+
+/* ---------- match engine ---------- */
+const STOP=['and','of','for','the','in','a','to','with','science','sciences','studies','engineering'];
+function tokens(s){return (s||'').toLowerCase().split(/[^a-z]+/).filter(w=>w.length>2);}
+function scoreProg(prog,kw){
+  const p=prog.toLowerCase();let sc=0;
+  if(!kw.length)return 1;
+  kw.forEach(w=>{ if(p.includes(w)) sc += STOP.includes(w)?1:6; });
+  // adjacency bonus for full phrase
+  if(kw.length>1 && p.includes(kw.join(' '))) sc+=10;
+  return sc;
+}
+function runMatch(){
+  const kwRaw=$('m_kw').value.trim();
+  const kw=tokens(kwRaw);
+  const lvl=$('m_level').value, reg=$('m_reg').value;
+  const out=[];
+  UNIS.forEach(u=>{
+    if(reg&&u.region!==reg)return;
+    const hits=[];
+    if(lvl!=='master')(u.l||[]).forEach(p=>{const s=scoreProg(p,kw);if(s>0)hits.push({p,s,lv:'Bachelor'});});
+    if(lvl!=='bachelor')(u.m||[]).forEach(p=>{const s=scoreProg(p,kw);if(s>0)hits.push({p,s,lv:'Master'});});
+    if(!hits.length)return;
+    hits.sort((a,b)=>b.s-a.s);
+    // drop weak partial matches once a strong one exists (e.g. "Science of Climate" for "data science")
+    const cut=Math.max(4,hits[0].s*0.4);
+    const strong=hits.filter(h=>h.s>=cut);
+    const keep=(strong.length?strong:hits).slice(0,8);
+    const best=hits[0].s + (u.v?3:0) + (u.big?2:0);
+    out.push({u,hits:keep,score:best});
+  });
+  out.sort((a,b)=>b.score-a.score);
+  $('mCount').textContent=out.length+' universities match';
+  const el=$('matchList');el.innerHTML='';
+  if(!out.length){el.innerHTML='<div class="empty">No English-taught programme matched that keyword.<br>Try a broader word like "computer", "management", "biology".</div>';return;}
+  out.slice(0,40).forEach(o=>{
+    const c=document.createElement('div');c.className='card';
+    c.innerHTML=`<div style="display:flex;gap:10px;align-items:flex-start">
+        <div style="flex:1"><b style="font-size:16px">${o.u.idx}. ${esc(o.u.n)}</b>
+          <div class="muted">${esc(o.u.city)} ${o.u.v?'· ✓ verified data':''} ${o.u.med?'· 🩺 English Medicine':''}</div></div>
+        <div class="score">fit ${o.score}</div></div>
+      <div style="margin-top:8px">${o.hits.map((h,i)=>`<div class="chk"><input type="checkbox" data-pick="${i}"><span>${esc(h.p)} <span class="why">${h.lv}</span></span></div>`).join('')}</div>
+      <div class="fl"><button class="btn p" data-add="${o.u.idx}">➕ Add ticked to student</button>
+      <a class="btn g" style="text-decoration:none;display:inline-block" target="_blank" rel="noopener"
+         href="https://www.google.com/search?q=${encodeURIComponent(o.u.n+' degree programmes taught in English')}">Official list ↗</a></div>`;
+    c.querySelector('[data-add]').onclick=()=>{
+      const sid=$('m_student').value;const st=DB.students.find(x=>x.id===sid);
+      if(!st){alert('Select a student first (top of this tab).');return;}
+      let n=0;
+      c.querySelectorAll('[data-pick]').forEach(cb=>{if(cb.checked){
+        st.apps.push({uni:o.u.n,code:o.u.c,prog:o.hits[+cb.dataset.pick].p,status:'Planned',deadline:''});n++;}});
+      if(!n){alert('Tick at least one programme.');return;}
+      if(st.stage<1)st.stage=1;
+      save();alert(n+' programme(s) added to '+st.name);
+    };
+    el.appendChild(c);
+  });
+}
+$('mGo').onclick=runMatch;
+$('m_kw').addEventListener('keydown',e=>{if(e.key==='Enter')runMatch();});
+
+/* ---------- pipeline ---------- */
+function renderPipe(){
+  const rows=[];
+  DB.students.forEach(s=>s.apps.forEach((a,i)=>rows.push({s,a,i})));
+  const t=$('pipeTable');
+  if(!rows.length){t.innerHTML='<tr><td class="empty">No applications yet — add from the Shortlist tab.</td></tr>';return;}
+  t.innerHTML=`<tr><th>Student</th><th>University</th><th class="hidesm">Programme</th><th>Deadline</th><th>Status</th></tr>`+
+   rows.map(r=>`<tr>
+     <td><b>${esc(r.s.name)}</b><div class="muted">${esc(r.s.intake)}</div></td>
+     <td>${esc(r.a.code)}<div class="muted hidesm">${esc(r.a.uni)}</div></td>
+     <td class="hidesm">${esc(r.a.prog)}</td>
+     <td><input type="date" value="${esc(r.a.deadline||'')}" data-pd="${r.s.id}|${r.i}" style="padding:5px;font-size:12.5px"></td>
+     <td><select data-ps="${r.s.id}|${r.i}">${['Planned','Applied','Admitted','Rejected','Enrolled'].map(x=>`<option ${r.a.status===x?'selected':''}>${x}</option>`).join('')}</select></td></tr>`).join('');
+  t.querySelectorAll('[data-ps]').forEach(sel=>sel.onchange=()=>{
+    const [sid,i]=sel.dataset.ps.split('|');const st=DB.students.find(x=>x.id===sid);
+    st.apps[+i].status=sel.value;
+    if(sel.value==='Admitted'&&st.stage<4)st.stage=4;
+    if(sel.value==='Applied'&&st.stage<3)st.stage=3;
+    save();
+  });
+  t.querySelectorAll('[data-pd]').forEach(inp=>inp.onchange=()=>{
+    const [sid,i]=inp.dataset.pd.split('|');DB.students.find(x=>x.id===sid).apps[+i].deadline=inp.value;save();
+  });
+}
+
+/* ---------- dashboard ---------- */
+function renderDash(){
+  const apps=DB.students.reduce((n,s)=>n+s.apps.length,0);
+  const admits=DB.students.reduce((n,s)=>n+s.apps.filter(a=>a.status==='Admitted'||a.status==='Enrolled').length,0);
+  const pend=DB.students.reduce((n,s)=>n+(DOCS.length-docsDone(s)),0);
+  $('k1').textContent=DB.students.length;$('k2').textContent=apps;$('k3').textContent=admits;$('k4').textContent=pend;
+
+  // next actions: deadlines + missing critical docs
+  const items=[];const today=new Date();
+  DB.students.forEach(s=>{
+    s.apps.forEach(a=>{ if(a.deadline&&a.status!=='Rejected'&&a.status!=='Enrolled'){
+      const days=Math.ceil((new Date(a.deadline)-today)/864e5);
+      items.push({d:days,txt:`<b>${esc(s.name)}</b> — ${esc(a.code)} ${esc(a.prog)}`,tag:days<0?'Overdue':days+'d left',cls:days<0?'st3':(days<21?'st1':'st0')});
+    }});
+    if(!(s.docs&&s.docs.cimea))items.push({d:60,txt:`<b>${esc(s.name)}</b> — start CIMEA / Declaration of Value`,tag:'blocker',cls:'st1'});
+    if(!(s.docs&&s.docs.english))items.push({d:70,txt:`<b>${esc(s.name)}</b> — English proof missing`,tag:'blocker',cls:'st1'});
+  });
+  items.sort((a,b)=>a.d-b.d);
+  $('actions').innerHTML=items.length?items.slice(0,12).map(i=>
+    `<div class="row"><div class="nm">${i.txt}</div><span class="pill ${i.cls}">${i.tag}</span></div>`).join('')
+    :'<div class="empty">Nothing pending. Add students and deadlines.</div>';
+
+  const by={};DB.students.forEach(s=>{const k=STAGES[s.stage]||'Lead';(by[k]=by[k]||[]).push(s.name)});
+  $('stageList').innerHTML=Object.keys(by).length?Object.entries(by).map(([k,v])=>
+    `<div class="row"><div class="nm"><b>${esc(k)}</b><div class="s">${esc(v.join(', '))}</div></div><span class="pill st0">${v.length}</span></div>`).join('')
+    :'<div class="empty">No students yet.</div>';
+}
+
+/* ---------- selects ---------- */
+function fillSelects(){
+  const opts=DB.students.map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join('');
+  ['m_student','u_student'].forEach(id=>{const v=$(id).value;$(id).innerHTML=opts||'<option value="">— add a student first —</option>';if(v)$(id).value=v;});
+  if(!$('m_reg').options.length||$('m_reg').options.length===1){
+    [...new Set(UNIS.map(u=>u.region))].sort().forEach(r=>{
+      const o=document.createElement('option');o.value=r;o.textContent=r;$('m_reg').appendChild(o);});
+  }
+}
+
+/* ---------- messaging ---------- */
+function buildMsg(){
+  const s=DB.students.find(x=>x.id===$('u_student').value);
+  if(!s){$('u_text').value='';return;}
+  const t=$('u_type').value;
+  const line='─────────────';
+  const appList=s.apps.length?s.apps.map(a=>`• ${a.uni}\n   ${a.prog}\n   Status: ${a.status}${a.deadline?' | Deadline: '+a.deadline:''}`).join('\n'):'• No applications added yet';
+  const missing=DOCS.filter(d=>!(s.docs&&s.docs[d[0]]));
+  let m='';
+  if(t==='status'){
+    m=`🎓 *VOYAGE — Application Update*\n${line}\nStudent: *${s.name}*\nIntake: ${s.intake} | ${s.level==='master'?'Master':'Bachelor'}\nCurrent stage: *${STAGES[s.stage]}*\nDocuments: ${docsDone(s)}/${DOCS.length} complete (${pct(s)}%)\n${line}\n📌 *Applications*\n${appList}\n${line}\n📄 *Pending documents* (${missing.length})\n${missing.slice(0,8).map(d=>'• '+d[1]).join('\n')||'• All documents received ✅'}\n${line}\nWe will share the next update as soon as there is progress.\n— Voyage Consultancy`;
+  } else if(t==='docs'){
+    m=`📄 *Documents needed — ${s.name}*\n${line}\nPlease send these at the earliest so we can proceed:\n\n${missing.map((d,i)=>`${i+1}. ${d[1]}${d[2]?'\n    ('+d[2]+')':''}`).join('\n')||'All documents received ✅'}\n${line}\nTip: scan in colour, PDF, clearly readable.\n— Voyage Consultancy`;
+  } else if(t==='admit'){
+    const ad=s.apps.filter(a=>a.status==='Admitted'||a.status==='Enrolled');
+    m=`🎉 *CONGRATULATIONS ${s.name}!*\n${line}\nAdmission confirmed:\n${ad.map(a=>`✅ ${a.uni}\n   ${a.prog}`).join('\n')||'—'}\n${line}\n*Next steps*\n1. Confirm acceptance & pay any deposit\n2. Universitaly pre-enrolment\n3. Apply DSU scholarship + ISEE Parificato\n4. Book visa appointment\n5. Arrange accommodation & insurance\n\nWe'll guide each step.\n— Voyage Consultancy`;
+  } else if(t==='scholar'){
+    m=`💰 *Scholarship reminder — ${s.name}*\n${line}\n*DSU regional scholarship* (biggest one — up to full fee waiver + monthly stipend + free canteen/housing)\n→ Requires *ISEE Parificato* prepared from your family income documents.\n→ Apply on the regional agency portal, usually Jul–Sep.\n\n*Also check*\n• University merit scholarships\n• Invest Your Talent in Italy (MAECI)\n• Regional housing grants\n${line}\nPlease share income & property documents so we can start ISEE.\n— Voyage Consultancy`;
+  } else {
+    m=`🛂 *Visa update — ${s.name}*\n${line}\nStage: *${STAGES[s.stage]}*\n\n*Checklist*\n• Universitaly pre-enrolment ${s.docs&&s.docs.unitaly?'✅':'❌ pending'}\n• Admission letter ${s.apps.some(a=>a.status==='Admitted')?'✅':'❌ pending'}\n• Financial proof ${s.docs&&s.docs.funds?'✅':'❌ pending'} (verify current amount)\n• Health insurance ${s.docs&&s.docs.insurance?'✅':'❌ pending'}\n• Accommodation proof ${s.docs&&s.docs.accom?'✅':'❌ pending'}\n${line}\nBook the consulate/VFS slot early — slots fill fast in peak season.\n— Voyage Consultancy`;
+  }
+  $('u_text').value=m;
+}
+$('u_student').onchange=buildMsg;$('u_type').onchange=buildMsg;
+const cur=()=>DB.students.find(x=>x.id===$('u_student').value);
+$('uWA').onclick=()=>{const s=cur();if(!s)return;const p=(s.phone||'').replace(/[^0-9]/g,'');
+  if(!p){alert('No WhatsApp number saved for this student.');return;}
+  window.open('https://wa.me/'+p+'?text='+encodeURIComponent($('u_text').value),'_blank');};
+$('uGroup').onclick=()=>{const s=cur();if(!s)return;
+  if(!s.group){alert('No group link saved. Add the WhatsApp group invite link in the student profile.');return;}
+  navigator.clipboard&&navigator.clipboard.writeText($('u_text').value);
+  window.open(s.group,'_blank');alert('Message copied — paste it into the group.');};
+$('uTG').onclick=()=>window.open('https://t.me/share/url?url=&text='+encodeURIComponent($('u_text').value),'_blank');
+$('uMail').onclick=()=>{const s=cur();if(!s)return;
+  location.href='mailto:'+(s.email||'')+'?subject='+encodeURIComponent('Voyage update — '+s.name)+'&body='+encodeURIComponent($('u_text').value.replace(/\*/g,''));};
+$('uCopy').onclick=()=>{navigator.clipboard.writeText($('u_text').value);$('uCopy').textContent='✓ Copied';setTimeout(()=>$('uCopy').textContent='⧉ Copy',1500);};
+
+/* ---------- guide ---------- */
+const STEPS=[
+ ['1. Profile &amp; document intake','Collect 10th/12th, degree, transcripts, passport, English proof. Start here — everything downstream depends on it.'],
+ ['2. Shortlist English-taught programmes','Use the Shortlist tab. Target 6–8: 2 ambitious, 4 realistic, 2 safe.'],
+ ['3. CIMEA / Declaration of Value','<b>Start 2–3 months early.</b> CIMEA Statement of Comparability is faster than consulate DoV and accepted by most universities.'],
+ ['4. University applications','Most open Nov–Feb for Sep intake; several close Mar–May. Deadlines differ per university — track them in Pipeline.'],
+ ['5. Admission letter','Confirm acceptance, pay deposit if required.'],
+ ['6. Universitaly pre-enrolment','<b>Mandatory.</b> No pre-enrolment = no student visa. Done on universitaly.it and validated by the university.'],
+ ['7. ISEE Parificato + DSU scholarship','Prepare income/asset docs. This is what makes Italy genuinely low-cost.'],
+ ['8. Student visa (Type D)','Book VFS/consulate. Need: pre-enrolment, admission, funds proof, insurance, accommodation.'],
+ ['9. Arrival — permesso di soggiorno','Apply within 8 working days of landing. Also: codice fiscale, bank account, university enrolment.']
+];
+$('guideSteps').innerHTML=STEPS.map(s=>`<div class="row"><div class="nm"><b>${s[0]}</b><div class="s">${s[1]}</div></div></div>`).join('');
+$('guideSch').innerHTML=[
+ ['DSU / regional right-to-study','The big one. Tuition waiver + monthly stipend + subsidised housing & canteen. Based on <b>ISEE Parificato</b> (family income &amp; assets), not merit alone. Each region has its own agency &amp; deadline (commonly Jul–Sep).'],
+ ['University merit scholarships','Per-university, often automatic with admission or a short extra form.'],
+ ['Invest Your Talent in Italy','MAECI programme — scholarship + internship, selected masters in management/engineering/design.'],
+ ['MAECI / Italian government grants','Annual call for international students, usually spring.']
+].map(s=>`<div class="row"><div class="nm"><b>${s[0]}</b><div class="s">${s[1]}</div></div></div>`).join('');
+$('guideVisa').innerHTML=[
+ ['Financial means proof','Consulate requires evidence of maintenance funds <b>(verify current amount for your consulate — it is revised yearly)</b>. Usually shown via bank balance/sponsor affidavit.'],
+ ['Health insurance','Minimum €30,000 coverage; can buy Italian national (SSN) after arrival.'],
+ ['Accommodation proof','Booking, rental contract, or university housing letter.'],
+ ['Education loan','Indian banks fund Italy studies; DSU + low public fees keep loan size small. Compare public-sector vs NBFC rates.'],
+ ['After landing','Permesso di soggiorno within 8 working days, codice fiscale, local bank account.']
+].map(s=>`<div class="row"><div class="nm"><b>${s[0]}</b><div class="s">${s[1]}</div></div></div>`).join('');
+$('guideP2').innerHTML=[
+ ['Automatic WhatsApp sending','Needs WhatsApp Business API (Meta Cloud API or Twilio) + a small server. QR-login libraries exist but violate WhatsApp ToS and get numbers banned — use the official API.'],
+ ['Auto scholarship &amp; deadline alerts','Needs a scheduled server job that scrapes/monitors university &amp; regional portals and pushes changes to you.'],
+ ['Multi-device / team access','Needs a hosted database (Supabase/Firebase) instead of this browser storage.'],
+ ['Document upload &amp; storage','Needs cloud storage (S3/Drive API) with per-student folders.'],
+ ['Two-way approval flow','Needs a bot that asks you to approve before sending — server + message webhook.']
+].map(s=>`<div class="row"><div class="nm"><b>${s[0]}</b><div class="s">${s[1]}</div></div></div>`).join('');
+
+/* ---------- backup ---------- */
+$('bBackup').onclick=()=>{
+  $('modal').innerHTML=`<h2>Backup &amp; restore</h2>
+    <p class="muted">Your data lives only in this browser. Export regularly — clearing browser data will erase it.</p>
+    <div class="fl"><button class="btn p" id="bExp">⤓ Export JSON</button>
+      <label class="btn g" style="display:inline-block">⤒ Import<input type="file" id="bImp" accept="application/json" style="display:none"></label>
+      <button class="btn g" id="bCls">Close</button></div>
+    <div style="margin-top:14px"><label>Or copy/paste your data</label><textarea id="bTxt" style="min-height:120px">${esc(JSON.stringify(DB))}</textarea></div>
+    <div class="fl"><button class="btn g" id="bPaste">Restore from box above</button></div>`;
+  $('mask').classList.add('on');
+  $('bCls').onclick=()=>$('mask').classList.remove('on');
+  $('bExp').onclick=()=>{const b=new Blob([JSON.stringify(DB,null,2)],{type:'application/json'});
+    const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='voyage-backup-'+new Date().toISOString().slice(0,10)+'.json';a.click();};
+  $('bImp').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();
+    r.onload=()=>{try{DB=JSON.parse(r.result);save();$('mask').classList.remove('on');alert('Restored.');}catch(x){alert('Bad file.')}};r.readAsText(f);};
+  $('bPaste').onclick=()=>{try{DB=JSON.parse($('bTxt').value);save();$('mask').classList.remove('on');alert('Restored.');}catch(x){alert('Invalid JSON.')}};
+};
+
+function renderAll(){renderStudents();renderDash();renderPipe();fillSelects();buildMsg();}
+renderAll();
+</script>
+</body>
+</html>
